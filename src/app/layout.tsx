@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Quantum Shift - 대시보드",
+  title: "Quantum Shift",
   description: "프로젝트 관리 및 팀 협업을 위한 대시보드",
 };
 

@@ -6,13 +6,13 @@ export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
-    <header className="bg-gray-900">
+    <header className="bg-gray-900 fixed top-0 left-0 right-0 z-50 md:relative md:z-auto">
       <div className="max-w-7xl mx-auto px-4 py-2 md:px-6 md:py-4">
         <div className="flex items-center justify-between">
         {/* 로고 영역 */}
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
-            <span className="font-tossface text-2xl">🎯</span>
+            <span className="font-tossface text-2xl">⚡</span>
             <h1 className="text-xl font-bold text-white">Quantum Shift</h1>
           </div>
         </div>

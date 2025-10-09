@@ -73,41 +73,23 @@ export function DynamicBanner() {
   const displayedBanners = [...banners, banners[0]] // 첫 번째 배너를 끝에 복제
 
   return (
-    <div className={`w-full ${banners[displayBannerIndex].color} transition-colors duration-500`}>
-      <div className="max-w-7xl mx-auto px-4 md:px-6 overflow-hidden h-[42px] relative">
+    <div className={`w-full ${banners[displayBannerIndex].color} transition-colors duration-500 fixed top-16 left-0 right-0 z-40 md:relative md:top-auto md:z-auto`}>
+      <div className="max-w-7xl mx-auto px-4 md:px-6 overflow-hidden h-[28px] relative">
         {/* 슬라이딩 컨테이너 */}
         <div 
           className={isTransitioning ? "transition-transform duration-500 ease-in-out" : ""}
-          style={{ transform: `translateY(-${currentBanner * 42}px)` }}
+          style={{ transform: `translateY(-${currentBanner * 28}px)` }}
         >
           {displayedBanners.map((banner, index) => (
-            <div key={`${banner.id}-${index}`} className="h-[42px] flex items-center">
+            <div key={`${banner.id}-${index}`} className="h-[28px] flex items-center">
               <div className="flex items-center justify-center w-full relative">
                 <div className="flex items-center space-x-2 text-center">
-                  <span className="font-tossface text-sm">{banner.icon}</span>
-                  <div>
-                    <span className="font-semibold text-white text-xs md:text-sm">
-                      {banner.title}
-                    </span>
-                    <p className="text-gray-200 text-[10px] md:text-xs">
-                      {banner.description}
-                    </p>
-                  </div>
+                  <span className="font-tossface text-xs">{banner.icon}</span>
+                  <span className="font-semibold text-white text-[10px] md:text-xs">
+                    {banner.title} - {banner.description}
+                  </span>
                 </div>
                 
-                <div className="absolute right-4 flex items-center space-x-1.5">
-                  {/* 배너 인디케이터 */}
-                  <div className="flex space-x-1">
-                    {banners.map((_, idx) => (
-                      <div
-                        key={idx}
-                        className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${
-                          idx === displayBannerIndex ? 'bg-white' : 'bg-white/50'
-                        }`}
-                      />
-                    ))}
-                  </div>
-                </div>
               </div>
             </div>
           ))}
