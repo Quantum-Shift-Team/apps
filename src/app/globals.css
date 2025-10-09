@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+/* CSS 변수 정의 */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-sidebar: #ffffff;
+  --bg-card: #ffffff;
+  --border-color: #e2e8f0;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+}
+
 /* Tossface 폰트 정의 */
 @font-face {
   font-family: 'Tossface';

@@ -1,24 +1,28 @@
 'use client'
 
 import { Header } from './Header'
-import { Sidebar } from './Sidebar'
 
 interface MainLayoutProps {
   children: React.ReactNode
+  maxWidth?: string
+  padding?: string
+  className?: string
 }
 
-export function MainLayout({ children }: MainLayoutProps) {
+export function MainLayout({ 
+  children, 
+  maxWidth = "max-w-7xl", 
+  padding = "px-6",
+  className = ""
+}: MainLayoutProps) {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       <Header />
-      <div className="flex">
-        <Sidebar />
-        <main className="flex-1 p-6">
-          <div className="max-w-7xl mx-auto">
-            {children}
-          </div>
-        </main>
-      </div>
+      <main className="bg-white">
+        <div className={`${maxWidth} mx-auto min-h-screen ${padding} ${className}`}>
+          {children}
+        </div>
+      </main>
     </div>
   )
 }
