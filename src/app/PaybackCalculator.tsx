@@ -46,7 +46,7 @@ export function PaybackCalculator() {
                 </div>
                 <span className="text-xs text-gray-400 mt-2">{step.title}</span>
                 {index < steps.length - 1 && (
-                  <div className="hidden md:block w-8 h-0.5 bg-gray-700 absolute ml-12 mt-5 z-0"></div>
+                  <div className="w-8 h-0.5 bg-gray-700 absolute ml-12 mt-5 z-0"></div>
                 )}
               </div>
             ))}
@@ -85,16 +85,19 @@ export function PaybackCalculator() {
         </div>
 
         {/* 다음 단계 버튼 */}
-        {selectedExchange && (
-          <div className="text-center mt-8">
-            <button
-              onClick={() => setCurrentStep(3)}
-              className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-            >
-              다음 단계로
-            </button>
-          </div>
-        )}
+        <div className="text-center mt-8">
+          <button
+            onClick={() => selectedExchange && setCurrentStep(3)}
+            disabled={!selectedExchange}
+            className={`px-8 py-3 rounded-lg transition-colors font-medium ${
+              selectedExchange
+                ? 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer'
+                : 'bg-gray-700 text-gray-400 cursor-not-allowed'
+            }`}
+          >
+            다음 단계로
+          </button>
+        </div>
       </div>
     </div>
   )

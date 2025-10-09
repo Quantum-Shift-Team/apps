@@ -16,9 +16,9 @@ export function MainLayout({
   className = ""
 }: MainLayoutProps) {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#191919]">
       <Header />
-      <main className="bg-white">
+      <main className="bg-[#191919]">
         <div className={`${maxWidth} mx-auto min-h-screen ${padding} ${className}`}>
           {children}
         </div>
