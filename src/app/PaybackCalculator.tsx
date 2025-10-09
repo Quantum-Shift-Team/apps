@@ -39,14 +39,14 @@ export function PaybackCalculator() {
           <div className="flex items-center space-x-4">
             {steps.map((step, index) => (
               <div key={step.number} className="flex flex-col items-center">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-colors ${
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-colors relative z-10 ${
                   step.active ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-400'
                 }`}>
                   {step.number}
                 </div>
                 <span className="text-xs text-gray-400 mt-2">{step.title}</span>
                 {index < steps.length - 1 && (
-                  <div className="hidden md:block w-8 h-0.5 bg-gray-700 absolute ml-12 mt-5"></div>
+                  <div className="hidden md:block w-8 h-0.5 bg-gray-700 absolute ml-12 mt-5 z-0"></div>
                 )}
               </div>
             ))}
