@@ -6,7 +6,7 @@ export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
-    <header className="bg-[#191919]">
+    <header className="bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 py-2 md:px-6 md:py-4">
         <div className="flex items-center justify-between">
         {/* 로고 영역 */}

@@ -9,9 +9,9 @@ export function ExchangeSection() {
         {/* 헤더 섹션 */}
         <div className="relative w-full">
           {/* 상단 배지 */}
-          <div className="absolute -top-5 left-0 z-10 rounded-md bg-blue-50 px-3 py-1 text-xs font-medium text-blue-600 shadow-sm">
+          <div className="absolute -top-5 left-0 z-10 rounded-md bg-blue-600 px-3 py-1 text-xs font-medium text-white shadow-sm">
             최대 수수료 페이백! 타업체 비교 불가
-            <div className="absolute top-full left-4 h-0 w-0 border-x-8 border-t-[8px] border-x-transparent border-t-blue-50"></div>
+            <div className="absolute top-full left-4 h-0 w-0 border-x-8 border-t-[8px] border-x-transparent border-t-blue-600"></div>
           </div>
           
           {/* 제목 및 더보기 */}
@@ -33,9 +33,9 @@ export function ExchangeSection() {
         <div className="grid w-full grid-cols-1 gap-2 md:grid-cols-2 md:gap-4 md:px-0">
           {EXCHANGES.map((exchange) => (
             <a key={exchange.id} href="#" className="group">
-              <div className={`flex items-center gap-2 rounded-lg ${exchange.cardBg} p-2.5 break-keep transition-all hover:bg-opacity-80`}>
+              <div className={`flex items-center gap-2 rounded-lg bg-gray-800 border border-gray-700 p-2.5 break-keep transition-all hover:bg-gray-700 hover:border-gray-600`}>
                 {/* 로고 이미지 영역 */}
-                <div className={`aspect-[16/9] h-16 md:h-20 overflow-hidden rounded-lg ${exchange.logoBg} flex items-center justify-center`}>
+                <div className={`aspect-[16/9] h-16 md:h-20 overflow-hidden rounded-lg bg-gray-700 flex items-center justify-center`}>
                   <span className="font-tossface text-4xl">{exchange.logo}</span>
                 </div>
                 

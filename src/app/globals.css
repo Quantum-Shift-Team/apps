@@ -2,19 +2,19 @@
 
 /* 전역 스타일 */
 body {
-  background-color: #191919;
+  background-color: #111827;
   color: #ffffff;
 }
 
 /* CSS 변수 정의 */
 :root {
-  --bg-primary: #191919;
-  --bg-secondary: #1f1f1f;
-  --bg-sidebar: #191919;
-  --bg-card: #1f1f1f;
-  --border-color: #333333;
+  --bg-primary: #111827;
+  --bg-secondary: #1f2937;
+  --bg-sidebar: #111827;
+  --bg-card: #1f2937;
+  --border-color: #374151;
   --text-primary: #ffffff;
-  --text-secondary: #a0a0a0;
+  --text-secondary: #d1d5db;
 }
 
 /* Tossface 폰트 정의 */

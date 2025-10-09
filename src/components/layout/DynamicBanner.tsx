@@ -21,7 +21,7 @@ export function DynamicBanner() {
       title: '신규 가입자 50% 할인',
       description: '지금 가입하면 첫 달 요금 50% 할인!',
       type: 'promotion',
-      color: 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200',
+      color: 'bg-gradient-to-r from-purple-900 via-indigo-900 to-blue-900',
       icon: '🎉'
     },
     {
@@ -29,7 +29,7 @@ export function DynamicBanner() {
       title: '새로운 기능 출시',
       description: 'AI 기반 프로젝트 관리 기능이 추가되었습니다',
       type: 'announcement',
-      color: 'bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-200',
+      color: 'bg-gradient-to-r from-blue-900 via-purple-900 to-indigo-900',
       icon: '🚀'
     },
     {
@@ -37,7 +37,7 @@ export function DynamicBanner() {
       title: '서버 점검 안내',
       description: '12월 15일 오전 2시-4시 서버 점검 예정',
       type: 'announcement',
-      color: 'bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200',
+      color: 'bg-gradient-to-r from-indigo-900 via-purple-900 to-pink-900',
       icon: '⚡'
     }
   ]
@@ -82,27 +82,27 @@ export function DynamicBanner() {
         >
           {displayedBanners.map((banner, index) => (
             <div key={`${banner.id}-${index}`} className="h-[42px] flex items-center">
-              <div className="flex items-center justify-between w-full">
-                <div className="flex items-center space-x-2">
+              <div className="flex items-center justify-center w-full relative">
+                <div className="flex items-center space-x-2 text-center">
                   <span className="font-tossface text-sm">{banner.icon}</span>
                   <div>
-                    <span className="font-semibold text-gray-800 text-xs md:text-sm">
+                    <span className="font-semibold text-white text-xs md:text-sm">
                       {banner.title}
                     </span>
-                    <p className="text-gray-600 text-[10px] md:text-xs">
+                    <p className="text-gray-200 text-[10px] md:text-xs">
                       {banner.description}
                     </p>
                   </div>
                 </div>
                 
-                <div className="flex items-center space-x-1.5">
+                <div className="absolute right-4 flex items-center space-x-1.5">
                   {/* 배너 인디케이터 */}
                   <div className="flex space-x-1">
                     {banners.map((_, idx) => (
                       <div
                         key={idx}
                         className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${
-                          idx === displayBannerIndex ? 'bg-gray-600' : 'bg-gray-300'
+                          idx === displayBannerIndex ? 'bg-white' : 'bg-white/50'
                         }`}
                       />
                     ))}
