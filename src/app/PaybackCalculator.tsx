@@ -452,17 +452,6 @@ export function PaybackCalculator() {
               return (
                 <>
                   <div className="space-y-6">
-                    {/* 페이백 결과 */}
-                    <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg p-8 text-center">
-                      <div className="text-sm text-blue-200 mb-2">예상 일일 페이백</div>
-                      <div className="text-5xl font-bold text-white mb-4">
-                        {Math.round(dailyPayback).toLocaleString()}원
-                      </div>
-                      <div className="text-blue-200 text-sm">
-                        약 {Math.round(dailyPayback / 10000).toLocaleString()}만원
-                      </div>
-                    </div>
-
                     {/* 월간/연간 예상 */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="bg-gray-800 rounded-lg p-6 text-center">
