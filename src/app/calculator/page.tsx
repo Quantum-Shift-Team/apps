@@ -3,7 +3,7 @@ import { PaybackCalculator } from "../PaybackCalculator";
 
 export default function CalculatorPage() {
   return (
-    <MainLayout fixedHeight={true}>
+    <MainLayout fixedHeight={true} className="flex items-center justify-center">
       <PaybackCalculator />
     </MainLayout>
   );
