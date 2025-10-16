@@ -23,10 +23,7 @@ export function MainLayout({
       <Header />
       <main className="bg-gray-900 pb-20 md:pb-0 pt-20 md:pt-20">
         <div
-          className={`${maxWidth} mx-auto ${
-            fixedHeight
-              ? "h-[calc(100vh-5rem-4rem)] md:h-[calc(100vh-6rem)]"
-              : "min-h-screen"
+          className={`${maxWidth}
           } ${padding} ${className}`}
         >
           {children}

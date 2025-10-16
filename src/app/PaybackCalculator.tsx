@@ -92,9 +92,9 @@ export function PaybackCalculator() {
 
   return (
     <div className="">
-      <div className="max-w-4xl mx-auto flex-1 flex flex-col justify-between">
+      <div className="max-w-4xl mx-auto flex-1 flex flex-col">
         {/* 상단 섹션 */}
-        <div>
+        <div className="p-10 h-60">
           {/* 계산기 모드 - 기존 UI */}
           <div className="text-center mb-8">
             <h3 className="text-xl md:text-2xl font-semibold text-green-400 mb-2">
