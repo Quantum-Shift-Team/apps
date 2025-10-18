@@ -81,7 +81,7 @@ export function RealtimePaybackSection() {
         </div>
 
         {/* 실시간 유저 리스트 */}
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="px-2">
           <div className="flex items-center justify-between mb-4">
             <h4 className="text-lg font-semibold">실시간 환급 내역</h4>
             <div className="flex items-center space-x-2">

@@ -26,15 +26,15 @@ export default function Home() {
         {/* 페이백 계산기 섹션 */}
         <div className="px-6 py-2 bg-gray-900 text-white mb-8">
           <div className="max-w-4xl mx-auto text-center">
-            <p className="text-gray-400 text-lg mb-8">
-              나도 페이백을 받을 수 있는지 지금 확인해보세요
-            </p>
             <Link
               href="/calculator"
-              className="inline-block px-12 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-bold text-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="inline-block w-[90%] py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-2xl font-bold text-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
             >
-              계산기 시작하기
+              내 환급 금액 계산하기
             </Link>
+            <p className="text-gray-400 text-sm mt-2">
+              나도 페이백을 받을 수 있는지 지금 확인해보세요!
+            </p>
           </div>
         </div>
       </div>
