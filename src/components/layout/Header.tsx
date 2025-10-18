@@ -6,7 +6,8 @@ import { LAYOUT_CONSTANTS } from "@/lib/constants";
 export function Header() {
   return (
     <header 
-      className={`bg-gray-800 border-b border-gray-700 fixed top-0 left-0 right-0 z-50 md:relative md:z-auto h-${LAYOUT_CONSTANTS.HEADER_HEIGHT}`}
+      className="bg-gray-800 border-b border-gray-700 fixed top-0 left-0 right-0 z-50 md:relative md:z-auto"
+      style={{ height: `${LAYOUT_CONSTANTS.HEADER_HEIGHT * 0.25}rem` }}
     >
       <div className="max-w-7xl mx-auto px-4 h-full flex items-center">
         <div className="flex items-center justify-between w-full">
