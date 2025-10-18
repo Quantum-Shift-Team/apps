@@ -13,13 +13,13 @@ export default function LoginPage() {
         <div className="max-w-sm w-full">
           {/* 상단 영역 */}
           <div className="text-center mb-8">
-            <div className="mb-6">
+            {/* <div className="mb-6">
               <span className="font-tossface text-5xl sm:text-6xl text-yellow-400">
                 ⚡
               </span>
-            </div>
+            </div> */}
             <h1 className="text-xl sm:text-2xl font-bold text-white mb-3">
-              Quantum Shift
+            ⚡ Quantum Shift
             </h1>
           </div>
 

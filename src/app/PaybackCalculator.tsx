@@ -147,7 +147,7 @@ export function PaybackCalculator() {
                   <button
                     key={exchange.id}
                     onClick={() => setSelectedExchange(exchange.id)}
-                    className={`p-4 rounded-lg border transition-all ${
+                    className={`px-4 py-2 rounded-lg border transition-all ${
                       selectedExchange === exchange.id
                         ? "border-blue-500 bg-blue-500/10"
                         : "border-gray-600 bg-gray-700 hover:border-gray-500"
