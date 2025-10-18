@@ -1,6 +1,7 @@
 "use client";
 
 import { EXCHANGES } from "@/lib/exchanges";
+import Link from "next/link";
 
 export function ExchangeSection() {
   return (
@@ -46,7 +47,7 @@ export function ExchangeSection() {
         {/* 거래소 그리드 */}
         <div className="grid w-full grid-cols-1 gap-2 md:grid-cols-2 md:gap-4 md:px-0">
           {EXCHANGES.map((exchange) => (
-            <a key={exchange.id} href="#" className="group">
+            <Link key={exchange.id} href={`/exchange/${exchange.id}`} className="group">
               <div
                 className={`flex items-center gap-2 rounded-lg bg-gray-800 border border-gray-700 p-2.5 break-keep transition-all hover:bg-gray-700 hover:border-gray-600`}
               >
@@ -101,7 +102,7 @@ export function ExchangeSection() {
                   </svg>
                 </div>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>
