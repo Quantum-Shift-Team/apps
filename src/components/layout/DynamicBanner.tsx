@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
+import { LAYOUT_CONSTANTS } from "@/lib/constants";
 interface BannerData {
   id: number;
   title: string;
@@ -75,7 +75,7 @@ export function DynamicBanner() {
 
   return (
     <div
-      className={`w-full ${banners[displayBannerIndex].color} transition-colors duration-500 fixed top-20 left-0 right-0 z-40 md:relative md:top-auto md:z-auto`}
+      className={`w-full ${banners[displayBannerIndex].color} transition-colors duration-500 fixed top-${LAYOUT_CONSTANTS.HEADER_HEIGHT} left-0 right-0 z-40 md:relative md:top-auto md:z-auto`}
     >
       <div className="max-w-7xl mx-auto px-4 md:px-6 overflow-hidden h-[28px] relative">
         {/* 슬라이딩 컨테이너 */}

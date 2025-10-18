@@ -7,6 +7,7 @@ import { ExchangeSection } from "./ExchangeSection";
 import { RealtimePaybackSection } from "./RealtimePaybackSection";
 import { PaybackCalculator } from "./PaybackCalculator";
 import { BackHeader } from "@/components/layout/BackHeader";
+import { LAYOUT_CONSTANTS } from "@/lib/constants";
 
 export default function Home() {
   const [showCalculator, setShowCalculator] = useState(false);
@@ -33,7 +34,7 @@ export default function Home() {
       <DynamicBanner />
       
       {/* 메인 콘텐츠 - 헤더 높이만큼 패딩 적용 */}
-      <div className="pt-20 md:pt-0">
+      <div className={`pt-${LAYOUT_CONSTANTS.HEADER_HEIGHT} md:pt-0`}>
         {/* 광고판 - 화면 꽉차게 */}
         <div
           className="w-full h-96 bg-cover bg-center bg-no-repeat"

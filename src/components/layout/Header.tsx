@@ -1,12 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import { LAYOUT_CONSTANTS } from "@/lib/constants";
 
 export function Header() {
   return (
-    <header className="bg-gray-800 border-b border-gray-700 fixed top-0 left-0 right-0 z-50 md:relative md:z-auto">
-      <div className="max-w-7xl mx-auto px-4 py-1 md:px-6 md:py-1">
-        <div className="flex items-center justify-between">
+    <header 
+      className={`bg-gray-800 border-b border-gray-700 fixed top-0 left-0 right-0 z-50 md:relative md:z-auto h-${LAYOUT_CONSTANTS.HEADER_HEIGHT}`}
+    >
+      <div className="max-w-7xl mx-auto px-4 h-full flex items-center">
+        <div className="flex items-center justify-between w-full">
           {/* 로고 영역 */}
           <div className="flex items-center space-x-4">
             <Link
@@ -32,10 +35,9 @@ export function Header() {
           </div>
 
           {/* 모바일 로그인 아이콘 */}
-          <div className="md:hidden">
+          <div className="md:hidden h-6">
             <Link
               href="/login"
-              className="p-2 text-gray-300 hover:text-white transition-colors"
             >
               <svg
                 className="w-6 h-6"

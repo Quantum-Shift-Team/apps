@@ -9,7 +9,7 @@ export default function LoginPage() {
       {/* 고정 헤더 */}
       <BackHeader backLink="/" />
 
-      <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-20">
+      <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
         <div className="max-w-sm w-full">
           {/* 상단 영역 */}
           <div className="text-center mb-8">
