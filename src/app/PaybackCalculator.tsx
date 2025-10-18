@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { EXCHANGES } from "@/lib/exchanges";
 import Image from "next/image";
 
+
 export function PaybackCalculator({ onClose }: { onClose: () => void }) {
   const [selectedExchange, setSelectedExchange] = useState<string | null>(null);
   const [leverage, setLeverage] = useState<number>(1);
@@ -369,31 +370,31 @@ export function PaybackCalculator({ onClose }: { onClose: () => void }) {
               return (
                 <div className="space-y-6">
                   {/* 월간/연간 예상 */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-gray-800 rounded-lg p-6 text-center">
-                      <div className="text-sm text-gray-400 mb-2">
+                  <div className="space-y-6">
+                    <div className="text-center space-y-2">
+                      <div className="text-sm text-gray-400">
                         월간 예상 페이백
                       </div>
-                      <div className="text-3xl font-bold text-green-400 mb-2">
+                      <div className="text-3xl font-bold text-green-400">
                         {Math.round(monthlyPayback).toLocaleString()}원
                       </div>
                       <div className="text-sm text-gray-500">
-                        약 {Math.round(monthlyPayback / 10000).toLocaleString()}
-                        만원
+                        약 {Math.round(monthlyPayback / 10000).toLocaleString()}만원
                       </div>
                     </div>
-                    <div className="bg-gray-800 rounded-lg p-6 text-center">
-                      <div className="text-sm text-gray-400 mb-2">
+                    <div className="w-full h-px bg-gray-600"></div>
+                    <div className="text-center space-y-2">
+                      <div className="text-sm text-gray-400">
                         연간 예상 페이백
                       </div>
-                      <div className="text-3xl font-bold text-yellow-400 mb-2">
+                      <div className="text-3xl font-bold text-yellow-400">
                         {Math.round(yearlyPayback).toLocaleString()}원
                       </div>
                       <div className="text-sm text-gray-500">
-                        약 {Math.round(yearlyPayback / 10000).toLocaleString()}
-                        만원
+                        약 {Math.round(yearlyPayback / 10000).toLocaleString()}만원
                       </div>
                     </div>
+                    <div className="w-full h-px bg-gray-600"></div>
                   </div>
 
                   {/* 선택 정보 요약 */}
@@ -426,44 +427,46 @@ export function PaybackCalculator({ onClose }: { onClose: () => void }) {
                       </div>
                     </div>
                   </div>
+                  <div className="w-full h-px bg-gray-600"></div>
+
 
                   {/* 상세 정보 */}
                   <div>
                     <h4 className="text-lg font-semibold mb-4">
                       상세 계산 내역
                     </h4>
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center py-2 border-b border-gray-700">
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center py-2 border-b border-gray-800">
                         <span className="text-gray-400">일일 거래 횟수</span>
                         <span className="text-white font-semibold">
                           {dailyTrades}회
                         </span>
                       </div>
-                      <div className="flex justify-between items-center py-2 border-b border-gray-700">
+                      <div className="flex justify-between items-center py-2 border-b border-gray-800">
                         <span className="text-gray-400">일일 거래량</span>
                         <span className="text-white font-semibold">
                           {Math.round(tradingVolume).toLocaleString()}원
                         </span>
                       </div>
-                      <div className="flex justify-between items-center py-2 border-b border-gray-700">
+                      <div className="flex justify-between items-center py-2 border-b border-gray-800">
                         <span className="text-gray-400">평균 수수료율</span>
                         <span className="text-white font-semibold">
                           {(avgFee * 100).toFixed(3)}%
                         </span>
                       </div>
-                      <div className="flex justify-between items-center py-2 border-b border-gray-700">
+                      <div className="flex justify-between items-center py-2 border-b border-gray-800">
                         <span className="text-gray-400">일일 수수료</span>
                         <span className="text-white font-semibold">
                           {Math.round(dailyFee).toLocaleString()}원
                         </span>
                       </div>
-                      <div className="flex justify-between items-center py-2 border-b border-gray-700">
+                      <div className="flex justify-between items-center py-2 border-b border-gray-800">
                         <span className="text-gray-400">페이백 비율</span>
                         <span className="text-blue-400 font-semibold">
                           {selectedExchangeData.paybackRate}%
                         </span>
                       </div>
-                      <div className="flex justify-between items-center py-2">
+                      <div className="flex justify-between items-center">
                         <span className="text-gray-400">일일 페이백</span>
                         <span className="text-green-400 font-semibold text-lg">
                           {Math.round(dailyPayback).toLocaleString()}원
