@@ -94,7 +94,7 @@ export function PaybackCalculator() {
     <div className="relative h-full">
       {/* 메인 콘텐츠 영역 - 스크롤 가능 */}
       <div className="h-full overflow-y-auto pb-24">
-        <div className="max-w-4xl mx-auto px-6">
+        <div className="max-w-4xl mx-auto">
           {/* 계산기 모드 - 기존 UI */}
           <div className="text-center mb-8 pt-6">
             <h3 className="text-xl md:text-2xl font-semibold text-green-400 mb-2">

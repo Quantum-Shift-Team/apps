@@ -1,12 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { MainLayout } from "@/components/layout/MainLayout";
+import { BackHeader } from "@/components/layout/BackHeader";
 
 export default function LoginPage() {
   return (
-    <MainLayout>
-      <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-20 md:pt-20">
+    <div className="min-h-screen bg-gray-900">
+      {/* 고정 헤더 */}
+      <BackHeader backLink="/" />
+
+      <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-20">
         <div className="max-w-sm w-full">
           {/* 상단 영역 */}
           <div className="text-center mb-8">
@@ -62,6 +65,6 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
-    </MainLayout>
+    </div>
   );
 }
