@@ -59,21 +59,21 @@ export function ExchangeSection() {
                    <div>
                      {/* 로고와 거래소 이름 */}
                      <div className="flex items-center gap-2 mb-2">
-                       <div className="w-8 h-8 overflow-hidden rounded-lg flex items-center justify-center">
-                         {exchange.logo.endsWith('.svg') ? (
-                           <Image 
-                             src={exchange.logo}
-                             alt={exchange.name}
-                             width={32}
-                             height={32}
-                             className="w-8 h-8 object-contain"
-                           />
-                         ) : (
-                           <span className="font-tossface text-xl">
-                             {exchange.logo}
-                           </span>
-                         )}
-                       </div>
+                        <div className="w-8 h-8 overflow-hidden rounded-lg flex items-center justify-center">
+                          {exchange.logo.endsWith('.svg') || exchange.logo.endsWith('.png') ? (
+                            <Image 
+                              src={exchange.logo}
+                              alt={exchange.name}
+                              width={32}
+                              height={32}
+                              className={exchange.logoSize}
+                            />
+                          ) : (
+                            <span className={`font-tossface ${exchange.logoSize}`}>
+                              {exchange.logo}
+                            </span>
+                          )}
+                        </div>
                        <h3 className="text-sm font-semibold text-white">
                          {exchange.name}
                        </h3>

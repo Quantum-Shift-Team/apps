@@ -163,16 +163,16 @@ export function PaybackCalculator({ onClose }: { onClose: () => void }) {
                   >
                     <div className="flex flex-col items-start">
                       <div className="flex items-center gap-2">
-                        {exchange.logo.endsWith('.svg') ? (
+                        {exchange.logo.endsWith('.svg') || exchange.logo.endsWith('.png') ? (
                           <Image 
                             src={exchange.logo}
                             alt={exchange.name}
                             width={20}
                             height={20}
-                            className="w-5 h-5"
+                            className={exchange.logoSize}
                           />
                         ) : (
-                          <span className="font-tossface text-lg">
+                          <span className={`font-tossface ${exchange.logoSize}`}>
                             {exchange.logo}
                           </span>
                         )}
