@@ -1,7 +1,5 @@
 "use client";
 
-import Link from "next/link";
-
 interface BackHeaderProps {
   backLink: string;
   onClose?: () => void;

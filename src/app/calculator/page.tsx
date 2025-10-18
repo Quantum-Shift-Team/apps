@@ -1,3 +1,5 @@
+"use client";
+
 import { PaybackCalculator } from "../PaybackCalculator";
 import { BackHeader } from "@/components/layout/BackHeader";
 
