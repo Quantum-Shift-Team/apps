@@ -4,6 +4,7 @@ import { EXCHANGES } from "@/lib/exchanges";
 import { notFound } from "next/navigation";
 import { use } from "react";
 import Image from "next/image";
+import { FixedBottomButton } from "@/components/ui/FixedBottomButton";
 
 interface ExchangePageProps {
   params: Promise<{
@@ -149,15 +150,9 @@ export default function ExchangePage({ params }: ExchangePageProps) {
       </div>
       
       {/* 하단 고정 버튼 영역 */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 z-50">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center">
-            <button className="w-[90%] py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors font-medium">
-              거래소 가입하기
-            </button>
-          </div>
-        </div>
-      </div>
+      <FixedBottomButton href={`/exchange/newpage/${exchange.id}`}>
+        거래소 가입하기
+      </FixedBottomButton>
     </>
   );
 }

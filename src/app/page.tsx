@@ -68,7 +68,7 @@ export default function Home() {
           <div className="max-w-4xl mx-auto text-center">
             <button
               onClick={openCalculator}
-              className="inline-block w-[90%] py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-2xl font-bold text-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="inline-block w-[90%] py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors font-medium"
             >
               내 환급 금액 계산하기
             </button>

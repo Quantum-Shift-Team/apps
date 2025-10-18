@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { EXCHANGES } from "@/lib/exchanges";
 import Image from "next/image";
+import { FixedBottomButton } from "@/components/ui/FixedBottomButton";
 
 
 export function PaybackCalculator({ onClose }: { onClose: () => void }) {
@@ -481,85 +482,63 @@ export function PaybackCalculator({ onClose }: { onClose: () => void }) {
       </div>
 
       {/* 하단 고정 버튼 영역 */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 z-50">
-        <div className="max-w-4xl mx-auto">
-          {/* Step 1 버튼 */}
-          {currentStep === 1 && (
-            <div className="text-center">
-              <button
-                onClick={() => selectedExchange && setCurrentStep(2)}
-                disabled={!selectedExchange}
-                className={`w-[90%] py-3 rounded-lg transition-colors font-medium ${
-                  selectedExchange
-                    ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
-                    : "bg-gray-700 text-gray-400 cursor-not-allowed"
-                }`}
-              >
-                다음 단계로
-              </button>
-            </div>
-          )}
+      {currentStep === 1 && (
+        <FixedBottomButton
+          onClick={() => selectedExchange && setCurrentStep(2)}
+          disabled={!selectedExchange}
+          className={`w-[90%] py-3 rounded-lg transition-colors font-medium ${
+            selectedExchange
+              ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
+              : "bg-gray-700 text-gray-400 cursor-not-allowed"
+          }`}
+        >
+          다음 단계로
+        </FixedBottomButton>
+      )}
 
-          {/* Step 2 버튼 */}
-          {currentStep === 2 && (
-            <div className="text-center">
-              <button
-                onClick={() => setCurrentStep(3)}
-                className="w-[90%] py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors font-medium"
-              >
-                다음 단계로
-              </button>
-            </div>
-          )}
+      {currentStep === 2 && (
+        <FixedBottomButton
+          onClick={() => setCurrentStep(3)}
+        >
+          다음 단계로
+        </FixedBottomButton>
+      )}
 
-          {/* Step 3 버튼 */}
-          {currentStep === 3 && (
-            <div className="text-center">
-              <button
-                onClick={() => setCurrentStep(4)}
-                className="w-[90%] py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors font-medium"
-              >
-                다음 단계로
-              </button>
-            </div>
-          )}
+      {currentStep === 3 && (
+        <FixedBottomButton
+          onClick={() => setCurrentStep(4)}
+        >
+          다음 단계로
+        </FixedBottomButton>
+      )}
 
-          {/* Step 4 버튼 */}
-          {currentStep === 4 && (
-            <div className="text-center">
-              <button
-                onClick={() => tradingFrequency && setCurrentStep(5)}
-                disabled={!tradingFrequency}
-                className={`w-[90%] py-3 rounded-lg transition-colors font-medium ${
-                  tradingFrequency
-                    ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
-                    : "bg-gray-700 text-gray-400 cursor-not-allowed"
-                }`}
-              >
-                결과 보기
-              </button>
-            </div>
-          )}
+      {currentStep === 4 && (
+        <FixedBottomButton
+          onClick={() => tradingFrequency && setCurrentStep(5)}
+          disabled={!tradingFrequency}
+          className={`w-[90%] py-3 rounded-lg transition-colors font-medium ${
+            tradingFrequency
+              ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
+              : "bg-gray-700 text-gray-400 cursor-not-allowed"
+          }`}
+        >
+          결과 보기
+        </FixedBottomButton>
+      )}
 
-          {/* Step 5 버튼 */}
-          {currentStep === 5 && (
-            <div className="text-center">
-              <button
-                onClick={() => {
-                  setCurrentStep(1);
-                  setSelectedExchange(null);
-                  setLeverage(1);
-                  setSeedMoney(50);
-                  setTradingFrequency(null);
-                }}
-                className="w-[90%] py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors font-medium"
-              >
-                다시 계산하기
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
+      {currentStep === 5 && (
+        <FixedBottomButton
+          onClick={() => {
+            setCurrentStep(1);
+            setSelectedExchange(null);
+            setLeverage(1);
+            setSeedMoney(50);
+            setTradingFrequency(null);
+          }}
+        >
+          다시 계산하기
+        </FixedBottomButton>
+      )}
     </div>
   );
 }
