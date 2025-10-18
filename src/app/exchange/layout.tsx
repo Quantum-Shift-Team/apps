@@ -9,7 +9,7 @@ export default function ExchangeLayout({
   return (
     <div className="min-h-screen bg-gray-900">
       <BackHeader backLink="/" />
-      <main className={`pt-${LAYOUT_CONSTANTS.BACK_HEADER_HEIGHT} pb-20`}>
+      <main className={`pt-${LAYOUT_CONSTANTS.BACK_HEADER_HEIGHT} pb-24`}>
         {children}
       </main>
     </div>

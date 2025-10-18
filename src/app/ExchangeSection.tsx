@@ -2,6 +2,7 @@
 
 import { EXCHANGES } from "@/lib/exchanges";
 import Link from "next/link";
+import Image from "next/image";
 
 export function ExchangeSection() {
   return (
@@ -55,9 +56,19 @@ export function ExchangeSection() {
                 <div
                   className={`aspect-[16/9] h-16 md:h-20 overflow-hidden rounded-lg bg-gray-700 flex items-center justify-center`}
                 >
-                  <span className="font-tossface text-4xl">
-                    {exchange.logo}
-                  </span>
+                  {exchange.logo.endsWith('.svg') ? (
+                    <Image 
+                      src={exchange.logo}
+                      alt={exchange.name}
+                      width={48}
+                      height={48}
+                      className="w-10 h-10"
+                    />
+                  ) : (
+                    <span className="font-tossface text-4xl">
+                      {exchange.logo}
+                    </span>
+                  )}
                 </div>
 
                 {/* 정보 영역 */}
