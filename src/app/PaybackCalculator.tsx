@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { EXCHANGES } from "@/lib/exchanges";
 
-export function PaybackCalculator() {
+export function PaybackCalculator({ onClose }: { onClose: () => void }) {
   const [selectedExchange, setSelectedExchange] = useState<string | null>(null);
   const [leverage, setLeverage] = useState<number>(1);
   const [seedMoney, setSeedMoney] = useState<number>(50); // 초기값 50 = 50만원

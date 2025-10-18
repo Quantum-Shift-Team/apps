@@ -4,15 +4,16 @@ import Link from "next/link";
 
 interface BackHeaderProps {
   backLink: string;
+  onClose?: () => void;
 }
 
-export function BackHeader({ backLink }: BackHeaderProps) {
+export function BackHeader({ backLink, onClose }: BackHeaderProps) {
   return (
-    <header className="fixed top-0 left-0 right-0 bg-gray-900 z-50">
+    <header className="fixed top-0 left-0 right-0 bg-gray-900 z-[100]">
       <div className="max-w-7xl mx-auto px-4 py-4">
         <div className="flex items-center">
-          <Link
-            href={backLink}
+          <button
+            onClick={onClose || (() => window.location.href = backLink)}
             className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
           >
             <svg
@@ -28,7 +29,7 @@ export function BackHeader({ backLink }: BackHeaderProps) {
                 d="M15 19l-7-7 7-7"
               />
             </svg>
-          </Link>
+          </button>
         </div>
       </div>
     </header>

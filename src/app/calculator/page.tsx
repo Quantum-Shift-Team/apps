@@ -5,12 +5,14 @@ export default function CalculatorPage() {
   return (
     <div className="min-h-screen bg-gray-900">
       {/* 고정 헤더 */}
-      <BackHeader backLink="/" />
+      <div className="relative z-50">
+        <BackHeader backLink="/" />
+      </div>
 
       {/* 계산기 페이지 - 헤더 높이만큼 패딩 적용 */}
-      <div className="pt-12 min-h-screen flex items-start justify-center">
+      <div className="pt-20 min-h-screen flex items-start justify-center">
         <div className="w-full max-w-4xl mx-auto px-8">
-          <PaybackCalculator />
+          <PaybackCalculator onClose={() => window.history.back()} />
         </div>
       </div>
     </div>
