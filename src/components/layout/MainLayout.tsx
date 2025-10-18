@@ -1,7 +1,6 @@
 "use client";
 
 import { Header } from "./Header";
-import { MobileNavigation } from "./MobileNavigation";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -14,7 +13,6 @@ export function MainLayout({ children }: MainLayoutProps) {
       <main className="bg-gray-900">
         {children}
       </main>
-      <MobileNavigation />
     </div>
   );
 }

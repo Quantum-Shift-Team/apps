@@ -96,7 +96,7 @@ export function PaybackCalculator() {
       <div className="h-full overflow-y-auto pb-24">
         <div className="max-w-4xl mx-auto px-6">
           {/* 계산기 모드 - 기존 UI */}
-          <div className="text-center mb-8 pt-4">
+          <div className="text-center mb-8 pt-6">
             <h3 className="text-xl md:text-2xl font-semibold text-green-400 mb-2">
               내가 돌려받을 페이백 금액은?
             </h3>
@@ -133,7 +133,7 @@ export function PaybackCalculator() {
           {/* 스텝별 콘텐츠 */}
           {/* Step 1: 거래소 선택 */}
           {currentStep === 1 && (
-            <div className="bg-gray-800 rounded-lg p-6">
+            <div>
               <h4 className="text-lg font-semibold mb-4">
                 거래소를 선택해주세요
               </h4>
@@ -173,7 +173,7 @@ export function PaybackCalculator() {
 
           {/* Step 2: 레버리지 선택 */}
           {currentStep === 2 && (
-            <div className="bg-gray-800 rounded-lg p-6">
+            <div>
               <h4 className="text-lg font-semibold mb-6">
                 레버리지를 선택해주세요
               </h4>
@@ -220,7 +220,7 @@ export function PaybackCalculator() {
                     <button
                       key={preset}
                       onClick={() => setLeverage(preset)}
-                      className={`py-2 px-3 rounded-lg text-sm font-semibold transition-all ${
+                      className={`py-2 rounded-lg text-sm font-semibold transition-all ${
                         leverage === preset
                           ? "bg-blue-600 text-white"
                           : "bg-gray-700 text-gray-300 hover:bg-gray-600"
@@ -236,7 +236,7 @@ export function PaybackCalculator() {
 
           {/* Step 3: 시드 금액 선택 */}
           {currentStep === 3 && (
-            <div className="bg-gray-800 rounded-lg p-6">
+            <div>
               <h4 className="text-lg font-semibold mb-6">
                 시드 금액을 선택해주세요
               </h4>
@@ -289,7 +289,7 @@ export function PaybackCalculator() {
 
           {/* Step 4: 거래 빈도 선택 */}
           {currentStep === 4 && (
-            <div className="bg-gray-800 rounded-lg p-6">
+            <div>
               <h4 className="text-lg font-semibold mb-6">
                 거래 빈도를 선택해주세요
               </h4>
@@ -378,7 +378,7 @@ export function PaybackCalculator() {
                   </div>
 
                   {/* 선택 정보 요약 */}
-                  <div className="bg-gray-800 rounded-lg p-6">
+                  <div>
                     <h4 className="text-lg font-semibold mb-4">선택 정보</h4>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       <div>
@@ -409,7 +409,7 @@ export function PaybackCalculator() {
                   </div>
 
                   {/* 상세 정보 */}
-                  <div className="bg-gray-800 rounded-lg p-6">
+                  <div>
                     <h4 className="text-lg font-semibold mb-4">
                       상세 계산 내역
                     </h4>
@@ -459,7 +459,7 @@ export function PaybackCalculator() {
       </div>
 
       {/* 하단 고정 버튼 영역 */}
-      <div className="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-700 p-4 z-50">
+      <div className="fixed bottom-0 left-0 right-0 p-4 z-50">
         <div className="max-w-4xl mx-auto">
           {/* Step 1 버튼 */}
           {currentStep === 1 && (
@@ -467,7 +467,7 @@ export function PaybackCalculator() {
               <button
                 onClick={() => selectedExchange && setCurrentStep(2)}
                 disabled={!selectedExchange}
-                className={`px-8 py-3 rounded-lg transition-colors font-medium ${
+                className={`w-[90%] py-3 rounded-lg transition-colors font-medium ${
                   selectedExchange
                     ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
                     : "bg-gray-700 text-gray-400 cursor-not-allowed"
@@ -480,16 +480,10 @@ export function PaybackCalculator() {
 
           {/* Step 2 버튼 */}
           {currentStep === 2 && (
-            <div className="flex justify-between">
-              <button
-                onClick={() => setCurrentStep(1)}
-                className="px-6 py-3 rounded-lg bg-gray-700 text-white hover:bg-gray-600 transition-colors font-medium"
-              >
-                이전 단계로
-              </button>
+            <div className="text-center">
               <button
                 onClick={() => setCurrentStep(3)}
-                className="px-8 py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors font-medium"
+                className="w-[90%] py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors font-medium"
               >
                 다음 단계로
               </button>
@@ -498,16 +492,10 @@ export function PaybackCalculator() {
 
           {/* Step 3 버튼 */}
           {currentStep === 3 && (
-            <div className="flex justify-between">
-              <button
-                onClick={() => setCurrentStep(2)}
-                className="px-6 py-3 rounded-lg bg-gray-700 text-white hover:bg-gray-600 transition-colors font-medium"
-              >
-                이전 단계로
-              </button>
+            <div className="text-center">
               <button
                 onClick={() => setCurrentStep(4)}
-                className="px-8 py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors font-medium"
+                className="w-[90%] py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors font-medium"
               >
                 다음 단계로
               </button>
@@ -516,17 +504,11 @@ export function PaybackCalculator() {
 
           {/* Step 4 버튼 */}
           {currentStep === 4 && (
-            <div className="flex justify-between">
-              <button
-                onClick={() => setCurrentStep(3)}
-                className="px-6 py-3 rounded-lg bg-gray-700 text-white hover:bg-gray-600 transition-colors font-medium"
-              >
-                이전 단계로
-              </button>
+            <div className="text-center">
               <button
                 onClick={() => tradingFrequency && setCurrentStep(5)}
                 disabled={!tradingFrequency}
-                className={`px-8 py-3 rounded-lg transition-colors font-medium ${
+                className={`w-[90%] py-3 rounded-lg transition-colors font-medium ${
                   tradingFrequency
                     ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
                     : "bg-gray-700 text-gray-400 cursor-not-allowed"
@@ -539,13 +521,7 @@ export function PaybackCalculator() {
 
           {/* Step 5 버튼 */}
           {currentStep === 5 && (
-            <div className="flex justify-between">
-              <button
-                onClick={() => setCurrentStep(4)}
-                className="px-6 py-3 rounded-lg bg-gray-700 text-white hover:bg-gray-600 transition-colors font-medium"
-              >
-                이전 단계로
-              </button>
+            <div className="text-center">
               <button
                 onClick={() => {
                   setCurrentStep(1);
@@ -554,7 +530,7 @@ export function PaybackCalculator() {
                   setSeedMoney(50);
                   setTradingFrequency(null);
                 }}
-                className="px-8 py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors font-medium"
+                className="w-[90%] py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors font-medium"
               >
                 다시 계산하기
               </button>

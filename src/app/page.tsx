@@ -10,7 +10,7 @@ export default function Home() {
       <DynamicBanner />
       
       {/* 메인 콘텐츠 - 헤더 높이만큼 패딩 적용 */}
-      <div className="pt-20 md:pt-20 pb-20 md:pb-0">
+      <div className="pt-20 md:pt-20">
         {/* 광고판 - 화면 꽉차게 */}
         <div
           className="w-full h-96 bg-cover bg-center bg-no-repeat"
