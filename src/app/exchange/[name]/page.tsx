@@ -25,7 +25,7 @@ export default function ExchangePage({ params }: ExchangePageProps) {
     <>
       <div className="px-6 py-6 space-y-8">
         {/* 상단 헤더 */}
-        <div className="flex items-center gap-1 mb-3">
+        <div className="flex items-center gap-3 mb-3">
           {exchange.logo.endsWith('.svg') ? (
             <Image 
               src={exchange.logo}

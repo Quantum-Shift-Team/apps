@@ -3,7 +3,7 @@ export const EXCHANGES = [
   {
     id: 'bybit',
     name: 'Bybit',
-    logo: '💎',
+    logo: '/exchangeLogos/bybit/bybit_logo_icon.svg',
     paybackRate: 40,
     makerFee: 0.012,
     takerFee: 0.033,
@@ -58,7 +58,7 @@ export const EXCHANGES = [
   {
     id: 'binance',
     name: 'Binance',
-    logo: '/exchangeLogos/binance/logo_icon.svg',
+    logo: '/exchangeLogos/binance/binance_logo_icon.svg',
     paybackRate: 40,
     makerFee: 0.012,
     takerFee: 0.03,
