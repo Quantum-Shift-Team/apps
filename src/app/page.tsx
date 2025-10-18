@@ -14,19 +14,32 @@ export default function Home() {
   const [isAnimating, setIsAnimating] = useState(false);
 
   const openCalculator = () => {
-    setIsAnimating(true);
+    // 현재 스크롤 위치 저장
+    const scrollY = window.scrollY;
     setShowCalculator(true);
-    // 메인 페이지 스크롤 막기
+    // 메인 페이지 스크롤 막기 (위치 유지)
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = '100%';
     document.body.style.overflow = 'hidden';
+    // 애니메이션 시작을 위해 약간의 지연
+    setTimeout(() => {
+      setIsAnimating(true);
+    }, 10);
   };
 
   const closeCalculator = () => {
     setIsAnimating(false);
     // 메인 페이지 스크롤 복원
-    document.body.style.overflow = 'unset';
+    const scrollY = document.body.style.top;
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    document.body.style.overflow = '';
+    window.scrollTo(0, parseInt(scrollY || '0') * -1);
     setTimeout(() => {
       setShowCalculator(false);
-    }, 300);
+    }, 500);
   };
 
   return (
@@ -65,11 +78,11 @@ export default function Home() {
 
       {/* 계산기 오버레이 */}
       {showCalculator && (
-        <div className={`fixed inset-0 z-50 bg-gray-900 transform transition-transform duration-300 ease-in-out ${
+        <div className={`fixed inset-0 z-50 bg-gray-900 transform transition-transform duration-500 ease-out ${
           isAnimating ? 'translate-x-0' : 'translate-x-full'
         }`}>
           <BackHeader backLink="/" onClose={closeCalculator} />
-          <div className="h-full overflow-y-auto pt-14">
+          <div className="calculator-scroll-container h-full overflow-y-auto pt-14">
             <div className="w-full max-w-4xl mx-auto px-6">
               <PaybackCalculator onClose={closeCalculator} />
             </div>

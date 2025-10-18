@@ -12,7 +12,14 @@ export function PaybackCalculator({ onClose }: { onClose: () => void }) {
 
   // 스텝 변경 시 페이지 상단으로 스크롤
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // 계산기 오버레이의 스크롤 컨테이너를 찾아서 스크롤
+    const scrollContainer = document.querySelector('.calculator-scroll-container');
+    if (scrollContainer) {
+      scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      // 폴백으로 window 스크롤 사용
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }, [currentStep]);
 
   // 레버리지 프리셋
