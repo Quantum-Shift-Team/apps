@@ -540,7 +540,7 @@ export function PaybackCalculator() {
 
         {/* Step 5 버튼 */}
         {currentStep === 5 && (
-          <div className="flex justify-between mt-6 mb-20">
+          <div className="flex justify-between mt-6 mb-2">
             <button
               onClick={() => setCurrentStep(4)}
               className="px-6 py-3 rounded-lg bg-gray-700 text-white hover:bg-gray-600 transition-colors font-medium"

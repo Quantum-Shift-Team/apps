@@ -4,7 +4,7 @@ import { EXCHANGES } from "@/lib/exchanges";
 
 export function ExchangeSection() {
   return (
-    <div className="px-6 py-6 pt-120 space-y-6 mb-6">
+    <div className="px-6 py-6 space-y-6 mb-6">
       <div className="flex w-full flex-col content-center items-center justify-center gap-4">
         {/* 헤더 섹션 */}
         <div className="relative w-full">

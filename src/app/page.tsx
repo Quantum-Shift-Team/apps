@@ -6,12 +6,14 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <>
+    <MainLayout>
       <DynamicBanner />
-      <MainLayout padding="px-0">
+      
+      {/* 메인 콘텐츠 - 헤더 높이만큼 패딩 적용 */}
+      <div className="pt-20 md:pt-20 pb-20 md:pb-0">
         {/* 광고판 - 화면 꽉차게 */}
         <div
-          className="absolute left-0 right-0 w-full h-96 bg-cover bg-center bg-no-repeat mt-6 md:mt-0"
+          className="w-full h-96 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: "url(/images/dummy_banner.png)" }}
         ></div>
 
@@ -35,7 +37,7 @@ export default function Home() {
             </Link>
           </div>
         </div>
-      </MainLayout>
-    </>
+      </div>
+    </MainLayout>
   );
 }
