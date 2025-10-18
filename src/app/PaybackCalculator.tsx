@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { EXCHANGES } from "@/lib/exchanges";
 
 export function PaybackCalculator() {
@@ -9,6 +9,11 @@ export function PaybackCalculator() {
   const [seedMoney, setSeedMoney] = useState<number>(50); // 초기값 50 = 50만원
   const [tradingFrequency, setTradingFrequency] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(1);
+
+  // 스텝 변경 시 페이지 상단으로 스크롤
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentStep]);
 
   // 레버리지 프리셋
   const leveragePresets = [1, 2, 5, 10, 20, 50, 75, 100, 125, 150];
