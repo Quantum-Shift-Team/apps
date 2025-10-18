@@ -91,12 +91,12 @@ export function PaybackCalculator() {
   ];
 
   return (
-    <div className="">
-      <div className="max-w-4xl mx-auto flex-1 flex flex-col justify-between">
-        {/* 상단 섹션 */}
-        <div>
+    <div className="relative h-full">
+      {/* 메인 콘텐츠 영역 - 스크롤 가능 */}
+      <div className="h-full overflow-y-auto pb-24">
+        <div className="max-w-4xl mx-auto px-6">
           {/* 계산기 모드 - 기존 UI */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-8 pt-4">
             <h3 className="text-xl md:text-2xl font-semibold text-green-400 mb-2">
               내가 돌려받을 페이백 금액은?
             </h3>
@@ -129,13 +129,11 @@ export function PaybackCalculator() {
               ))}
             </div>
           </div>
-        </div>
 
-        {/* 중간 섹션 - 스크롤 가능한 콘텐츠 */}
-        <div className="flex-1 overflow-y-auto min-h-0">
+          {/* 스텝별 콘텐츠 */}
           {/* Step 1: 거래소 선택 */}
           {currentStep === 1 && (
-            <div className="bg-gray-800 rounded-lg h-88">
+            <div className="bg-gray-800 rounded-lg p-6">
               <h4 className="text-lg font-semibold mb-4">
                 거래소를 선택해주세요
               </h4>
@@ -175,7 +173,7 @@ export function PaybackCalculator() {
 
           {/* Step 2: 레버리지 선택 */}
           {currentStep === 2 && (
-            <div className="bg-gray-800 rounded-lg">
+            <div className="bg-gray-800 rounded-lg p-6">
               <h4 className="text-lg font-semibold mb-6">
                 레버리지를 선택해주세요
               </h4>
@@ -238,7 +236,7 @@ export function PaybackCalculator() {
 
           {/* Step 3: 시드 금액 선택 */}
           {currentStep === 3 && (
-            <div className="bg-gray-800 rounded-lg">
+            <div className="bg-gray-800 rounded-lg p-6">
               <h4 className="text-lg font-semibold mb-6">
                 시드 금액을 선택해주세요
               </h4>
@@ -291,7 +289,7 @@ export function PaybackCalculator() {
 
           {/* Step 4: 거래 빈도 선택 */}
           {currentStep === 4 && (
-            <div className="bg-gray-800 rounded-lg">
+            <div className="bg-gray-800 rounded-lg p-6">
               <h4 className="text-lg font-semibold mb-6">
                 거래 빈도를 선택해주세요
               </h4>
@@ -302,7 +300,7 @@ export function PaybackCalculator() {
                   <button
                     key={option.id}
                     onClick={() => setTradingFrequency(option.id)}
-                    className={`p-4 rounded-lg border-2 transition-all hover:scale-105 h-25 ${
+                    className={`p-4 rounded-lg border-2 transition-all hover:scale-105 ${
                       tradingFrequency === option.id
                         ? "border-blue-500 bg-blue-500/20"
                         : "border-gray-600 bg-gray-700/50 hover:border-gray-500"
@@ -321,10 +319,148 @@ export function PaybackCalculator() {
               </div>
             </div>
           )}
-        </div>
 
-        {/* 하단 섹션 - 버튼들 */}
-        <div className="mt-6 mb-2">
+          {/* Step 5: 결과 페이지 */}
+          {currentStep === 5 &&
+            (() => {
+              const selectedExchangeData = EXCHANGES.find(
+                (ex) => ex.id === selectedExchange
+              );
+              const selectedFrequency = frequencyOptions.find(
+                (opt) => opt.id === tradingFrequency
+              );
+
+              if (!selectedExchangeData || !selectedFrequency) return null;
+
+              // 계산
+              const dailyTrades = selectedFrequency.trades;
+              const tradingVolume =
+                actualSeedMoney * 10000 * leverage * dailyTrades; // 일일 거래량 (원)
+              const avgFee =
+                (selectedExchangeData.makerFee +
+                  selectedExchangeData.takerFee) /
+                2 /
+                100;
+              const dailyFee = tradingVolume * avgFee;
+              const dailyPayback =
+                dailyFee * (selectedExchangeData.paybackRate / 100);
+              const monthlyPayback = dailyPayback * 30;
+              const yearlyPayback = dailyPayback * 365;
+
+              return (
+                <div className="space-y-6">
+                  {/* 월간/연간 예상 */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-gray-800 rounded-lg p-6 text-center">
+                      <div className="text-sm text-gray-400 mb-2">
+                        월간 예상 페이백
+                      </div>
+                      <div className="text-3xl font-bold text-green-400 mb-2">
+                        {Math.round(monthlyPayback).toLocaleString()}원
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        약 {Math.round(monthlyPayback / 10000).toLocaleString()}
+                        만원
+                      </div>
+                    </div>
+                    <div className="bg-gray-800 rounded-lg p-6 text-center">
+                      <div className="text-sm text-gray-400 mb-2">
+                        연간 예상 페이백
+                      </div>
+                      <div className="text-3xl font-bold text-yellow-400 mb-2">
+                        {Math.round(yearlyPayback).toLocaleString()}원
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        약 {Math.round(yearlyPayback / 10000).toLocaleString()}
+                        만원
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 선택 정보 요약 */}
+                  <div className="bg-gray-800 rounded-lg p-6">
+                    <h4 className="text-lg font-semibold mb-4">선택 정보</h4>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <div>
+                        <div className="text-sm text-gray-400">거래소</div>
+                        <div className="text-lg font-bold text-white mt-1">
+                          {selectedExchangeData.name}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-sm text-gray-400">레버리지</div>
+                        <div className="text-lg font-bold text-white mt-1">
+                          {leverage}x
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-sm text-gray-400">시드 금액</div>
+                        <div className="text-lg font-bold text-white mt-1">
+                          {actualSeedMoney.toLocaleString()}만원
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-sm text-gray-400">거래 빈도</div>
+                        <div className="text-lg font-bold text-white mt-1">
+                          {selectedFrequency.label}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 상세 정보 */}
+                  <div className="bg-gray-800 rounded-lg p-6">
+                    <h4 className="text-lg font-semibold mb-4">
+                      상세 계산 내역
+                    </h4>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center py-2 border-b border-gray-700">
+                        <span className="text-gray-400">일일 거래 횟수</span>
+                        <span className="text-white font-semibold">
+                          {dailyTrades}회
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center py-2 border-b border-gray-700">
+                        <span className="text-gray-400">일일 거래량</span>
+                        <span className="text-white font-semibold">
+                          {Math.round(tradingVolume).toLocaleString()}원
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center py-2 border-b border-gray-700">
+                        <span className="text-gray-400">평균 수수료율</span>
+                        <span className="text-white font-semibold">
+                          {(avgFee * 100).toFixed(3)}%
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center py-2 border-b border-gray-700">
+                        <span className="text-gray-400">일일 수수료</span>
+                        <span className="text-white font-semibold">
+                          {Math.round(dailyFee).toLocaleString()}원
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center py-2 border-b border-gray-700">
+                        <span className="text-gray-400">페이백 비율</span>
+                        <span className="text-blue-400 font-semibold">
+                          {selectedExchangeData.paybackRate}%
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center py-2">
+                        <span className="text-gray-400">일일 페이백</span>
+                        <span className="text-green-400 font-semibold text-lg">
+                          {Math.round(dailyPayback).toLocaleString()}원
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+        </div>
+      </div>
+
+      {/* 하단 고정 버튼 영역 */}
+      <div className="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-700 p-4 z-50">
+        <div className="max-w-4xl mx-auto">
           {/* Step 1 버튼 */}
           {currentStep === 1 && (
             <div className="text-center">
@@ -401,166 +537,30 @@ export function PaybackCalculator() {
             </div>
           )}
 
-          {/* Step 5: 결과 페이지 */}
-          {currentStep === 5 &&
-            (() => {
-              const selectedExchangeData = EXCHANGES.find(
-                (ex) => ex.id === selectedExchange
-              );
-              const selectedFrequency = frequencyOptions.find(
-                (opt) => opt.id === tradingFrequency
-              );
-
-              if (!selectedExchangeData || !selectedFrequency) return null;
-
-              // 계산
-              const dailyTrades = selectedFrequency.trades;
-              const tradingVolume =
-                actualSeedMoney * 10000 * leverage * dailyTrades; // 일일 거래량 (원)
-              const avgFee =
-                (selectedExchangeData.makerFee +
-                  selectedExchangeData.takerFee) /
-                2 /
-                100;
-              const dailyFee = tradingVolume * avgFee;
-              const dailyPayback =
-                dailyFee * (selectedExchangeData.paybackRate / 100);
-              const monthlyPayback = dailyPayback * 30;
-              const yearlyPayback = dailyPayback * 365;
-
-              return (
-                <div className="space-y-6">
-                  {/* 월간/연간 예상 */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-gray-800 rounded-lg text-center">
-                      <div className="text-sm text-gray-400 mb-2">
-                        월간 예상 페이백
-                      </div>
-                      <div className="text-3xl font-bold text-green-400 mb-2">
-                        {Math.round(monthlyPayback).toLocaleString()}원
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        약 {Math.round(monthlyPayback / 10000).toLocaleString()}
-                        만원
-                      </div>
-                    </div>
-                    <div className="bg-gray-800 rounded-lg text-center">
-                      <div className="text-sm text-gray-400 mb-2">
-                        연간 예상 페이백
-                      </div>
-                      <div className="text-3xl font-bold text-yellow-400 mb-2">
-                        {Math.round(yearlyPayback).toLocaleString()}원
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        약 {Math.round(yearlyPayback / 10000).toLocaleString()}
-                        만원
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 선택 정보 요약 */}
-                  <div className="bg-gray-800 rounded-lg">
-                    <h4 className="text-lg font-semibold mb-4">선택 정보</h4>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      <div>
-                        <div className="text-sm text-gray-400">거래소</div>
-                        <div className="text-lg font-bold text-white mt-1">
-                          {selectedExchangeData.name}
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-sm text-gray-400">레버리지</div>
-                        <div className="text-lg font-bold text-white mt-1">
-                          {leverage}x
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-sm text-gray-400">시드 금액</div>
-                        <div className="text-lg font-bold text-white mt-1">
-                          {actualSeedMoney.toLocaleString()}만원
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-sm text-gray-400">거래 빈도</div>
-                        <div className="text-lg font-bold text-white mt-1">
-                          {selectedFrequency.label}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 상세 정보 */}
-                  <div className="bg-gray-800 rounded-lg">
-                    <h4 className="text-lg font-semibold mb-4">
-                      상세 계산 내역
-                    </h4>
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center py-2 border-b border-gray-700">
-                        <span className="text-gray-400">일일 거래 횟수</span>
-                        <span className="text-white font-semibold">
-                          {dailyTrades}회
-                        </span>
-                      </div>
-                      <div className="flex justify-between items-center py-2 border-b border-gray-700">
-                        <span className="text-gray-400">일일 거래량</span>
-                        <span className="text-white font-semibold">
-                          {Math.round(tradingVolume).toLocaleString()}원
-                        </span>
-                      </div>
-                      <div className="flex justify-between items-center py-2 border-b border-gray-700">
-                        <span className="text-gray-400">평균 수수료율</span>
-                        <span className="text-white font-semibold">
-                          {(avgFee * 100).toFixed(3)}%
-                        </span>
-                      </div>
-                      <div className="flex justify-between items-center py-2 border-b border-gray-700">
-                        <span className="text-gray-400">일일 수수료</span>
-                        <span className="text-white font-semibold">
-                          {Math.round(dailyFee).toLocaleString()}원
-                        </span>
-                      </div>
-                      <div className="flex justify-between items-center py-2 border-b border-gray-700">
-                        <span className="text-gray-400">페이백 비율</span>
-                        <span className="text-blue-400 font-semibold">
-                          {selectedExchangeData.paybackRate}%
-                        </span>
-                      </div>
-                      <div className="flex justify-between items-center py-2">
-                        <span className="text-gray-400">일일 페이백</span>
-                        <span className="text-green-400 font-semibold text-lg">
-                          {Math.round(dailyPayback).toLocaleString()}원
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })()}
+          {/* Step 5 버튼 */}
+          {currentStep === 5 && (
+            <div className="flex justify-between">
+              <button
+                onClick={() => setCurrentStep(4)}
+                className="px-6 py-3 rounded-lg bg-gray-700 text-white hover:bg-gray-600 transition-colors font-medium"
+              >
+                이전 단계로
+              </button>
+              <button
+                onClick={() => {
+                  setCurrentStep(1);
+                  setSelectedExchange(null);
+                  setLeverage(1);
+                  setSeedMoney(50);
+                  setTradingFrequency(null);
+                }}
+                className="px-8 py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors font-medium"
+              >
+                다시 계산하기
+              </button>
+            </div>
+          )}
         </div>
-
-        {/* Step 5 버튼 */}
-        {currentStep === 5 && (
-          <div className="flex justify-between mt-6 mb-2">
-            <button
-              onClick={() => setCurrentStep(4)}
-              className="px-6 py-3 rounded-lg bg-gray-700 text-white hover:bg-gray-600 transition-colors font-medium"
-            >
-              이전 단계로
-            </button>
-            <button
-              onClick={() => {
-                setCurrentStep(1);
-                setSelectedExchange(null);
-                setLeverage(1);
-                setSeedMoney(50);
-                setTradingFrequency(null);
-              }}
-              className="px-8 py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors font-medium"
-            >
-              다시 계산하기
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );
