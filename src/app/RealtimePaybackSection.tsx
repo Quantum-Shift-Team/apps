@@ -72,7 +72,7 @@ export function RealtimePaybackSection() {
       <div className="max-w-4xl mx-auto">
         {/* 실시간 페이백 리스트 뷰 */}
         <div className="text-center mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold mb-2">
+          <h2 className="text-2xl md:text-4xl font-bold mb-2">
             실시간 페이백 환급 현황
           </h2>
           <p className="text-gray-400 text-sm md:text-base">
