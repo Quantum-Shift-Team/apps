@@ -15,10 +15,17 @@ export function TimeIntervalSelector({
   const [isMounted, setIsMounted] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const [lastMinuteInterval, setLastMinuteInterval] = useState<'1' | '3' | '5' | '10' | '15'>('5');
 
   useEffect(() => {
     setIsMounted(true);
-  }, []);
+    
+    // 기본값이 분봉인 경우 마지막 분봉 설정
+    const minuteIntervals = ['1', '3', '5', '10', '15'];
+    if (minuteIntervals.includes(defaultInterval)) {
+      setLastMinuteInterval(defaultInterval as '1' | '3' | '5' | '10' | '15');
+    }
+  }, [defaultInterval]);
 
   const handleIntervalChange = (interval: '1' | '3' | '5' | '10' | '15' | '30' | '60' | '120' | '240' | 'D' | 'W' | 'M' | 'Y') => {
     setSelectedInterval(interval);
@@ -26,10 +33,20 @@ export function TimeIntervalSelector({
   };
 
   const handleMinuteButtonClick = () => {
-    setIsSheetOpen(true);
+    const minuteIntervals = ['1', '3', '5', '10', '15'];
+    const isCurrentlyMinute = minuteIntervals.includes(selectedInterval);
+    
+    if (isCurrentlyMinute) {
+      // 이미 분봉이 선택된 상태: 시트 열기
+      setIsSheetOpen(true);
+    } else {
+      // 다른 시간대가 선택된 상태: 마지막 분봉으로 변경
+      handleIntervalChange(lastMinuteInterval);
+    }
   };
 
   const handleMinuteSelect = (minute: '1' | '3' | '5' | '10' | '15') => {
+    setLastMinuteInterval(minute); // 마지막 분봉 업데이트
     handleIntervalChange(minute);
     closeSheet();
   };
@@ -47,7 +64,7 @@ export function TimeIntervalSelector({
     if (minuteIntervals.includes(selectedInterval)) {
       return `${selectedInterval}분`;
     }
-    return '5분';
+    return `${lastMinuteInterval}분`;
   };
 
 
@@ -70,19 +87,34 @@ export function TimeIntervalSelector({
         {/* 분봉 버튼 */}
         <button
           onClick={handleMinuteButtonClick}
-          className={`flex-1 px-4 py-2 text-xs font-medium rounded-lg transition-all duration-200 ${
+          className={`flex-1 px-2 py-2 text-xs font-medium rounded-lg transition-all duration-200 ${
             ['1', '3', '5', '10', '15'].includes(selectedInterval)
               ? 'bg-gray-600 text-white shadow-md'
               : 'text-gray-300'
           }`}
         >
-          {getMinuteDisplayText()}
+          <div className="flex items-center justify-center gap-1">
+            <span>{getMinuteDisplayText()}</span>
+            <svg 
+              className="w-3 h-3" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M19 9l-7 7-7-7" 
+              />
+            </svg>
+          </div>
         </button>
 
         {/* 일봉 버튼 */}
         <button
           onClick={() => handleIntervalChange('D')}
-          className={`flex-1 px-4 py-2 text-xs font-medium rounded-lg transition-all duration-200 ${
+          className={`flex-1 px-2 py-2 text-xs font-medium rounded-lg transition-all duration-200 ${
             selectedInterval === 'D'
               ? 'bg-gray-600 text-white shadow-md'
               : 'text-gray-300'
@@ -94,7 +126,7 @@ export function TimeIntervalSelector({
         {/* 주봉 버튼 */}
         <button
           onClick={() => handleIntervalChange('W')}
-          className={`flex-1 px-4 py-2 text-xs font-medium rounded-lg transition-all duration-200 ${
+          className={`flex-1 px-2 py-2 text-xs font-medium rounded-lg transition-all duration-200 ${
             selectedInterval === 'W'
               ? 'bg-gray-600 text-white shadow-md'
               : 'text-gray-300'
@@ -106,7 +138,7 @@ export function TimeIntervalSelector({
         {/* 월봉 버튼 */}
         <button
           onClick={() => handleIntervalChange('M')}
-          className={`flex-1 px-4 py-2 text-xs font-medium rounded-lg transition-all duration-200 ${
+          className={`flex-1 px-2 py-2 text-xs font-medium rounded-lg transition-all duration-200 ${
             selectedInterval === 'M'
               ? 'bg-gray-600 text-white shadow-md'
               : 'text-gray-300'
@@ -118,7 +150,7 @@ export function TimeIntervalSelector({
         {/* 년봉 버튼 */}
         <button
           onClick={() => handleIntervalChange('Y')}
-          className={`flex-1 px-4 py-2 text-xs font-medium rounded-lg transition-all duration-200 ${
+          className={`flex-1 px-2 py-2 text-xs font-medium rounded-lg transition-all duration-200 ${
             selectedInterval === 'Y'
               ? 'bg-gray-600 text-white shadow-md'
               : 'text-gray-300'

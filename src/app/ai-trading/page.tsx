@@ -43,7 +43,7 @@ export default function AITradingPage() {
         />
 
         {/* AI 트레이딩 특징 */}
-        <div className="space-y-4">
+        {/* <div className="space-y-4">
           <h3 className="text-lg font-semibold text-white">AI 트레이딩 특징</h3>
           <div className="space-y-3">
             <div className="flex items-center gap-3 p-3 bg-gray-800 rounded-lg">
@@ -59,7 +59,7 @@ export default function AITradingPage() {
               <span className="text-white">리스크 관리</span>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );
