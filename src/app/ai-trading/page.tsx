@@ -22,11 +22,10 @@ export default function AITradingPage() {
         </div>
 
         {/* AI 트레이딩 박스 */}
-        <div className="h-80 bg-gray-800 rounded-lg overflow-hidden">
+        <div className="bg-gray-800 rounded-lg overflow-hidden">
           <TradingViewWidget 
             symbol="BINANCE:BTCUSDT" 
             theme="dark" 
-            height="100%" 
             interval={selectedInterval}
             locale="ko"
             timezone="Asia/Seoul"
