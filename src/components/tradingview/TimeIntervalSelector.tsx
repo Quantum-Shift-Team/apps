@@ -150,7 +150,7 @@ export function TimeIntervalSelector({
         {/* 년봉 버튼 */}
         <button
           onClick={() => handleIntervalChange('Y')}
-          className={`flex-1 px-2 py-2 text-xs font-medium rounded-lg transition-all duration-200 ${
+          className={`flex-1 px- py-2 text-xs font-medium rounded-lg transition-all duration-200 ${
             selectedInterval === 'Y'
               ? 'bg-gray-600 text-white shadow-md'
               : 'text-gray-300'
