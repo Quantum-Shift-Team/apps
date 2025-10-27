@@ -14,7 +14,7 @@ interface LightweightChartsWidgetProps {
 
 export function LightweightChartsWidget({
   theme = "dark",
-  height = "400px",
+  height = "300px",
   interval = "1D",
   targetPrice
 }: LightweightChartsWidgetProps) {
@@ -42,9 +42,23 @@ export function LightweightChartsWidget({
         vertLines: { color: theme === 'dark' ? '#2a2a2a' : '#e0e0e0' },
         horzLines: { color: theme === 'dark' ? '#2a2a2a' : '#e0e0e0' },
       },
+      rightPriceScale: {
+        visible: true,
+        scaleMargins: {
+          top: 0.1,
+          bottom: 0.1,
+        },
+        borderVisible: false,
+        textColor: theme === 'dark' ? '#ffffff' : '#191919',
+        entireTextOnly: false,
+        autoScale: true,
+        alignLabels: true,
+      },
       localization: {
         priceFormatter: (price: number) => {
-          return `₩${price.toLocaleString('ko-KR')}`;
+          // 만원 단위로 표시
+          const manWon = Math.round(price / 10000);
+          return `${manWon}만`;
         },
       },
     });
@@ -65,20 +79,28 @@ export function LightweightChartsWidget({
     // 업비트 API에서 실시간 데이터 가져오기
     const fetchCandles = async () => {
       try {
-        // 업비트 캔들 API
-        const response = await fetch(
-          `https://api.upbit.com/v1/candles/${interval === '5' ? 'minutes' : 'days'}/${
-            interval === '5' ? '5' : '1'
-          }?market=KRW-BTC&count=200`
-        );
+        // 분봉인지 일봉인지 판단
+        const isMinuteCandle = !['D', 'W', 'M'].includes(interval);
+        
+        // API URL 생성
+        let apiUrl = '';
+        if (isMinuteCandle) {
+          // 분봉 (1, 3, 5, 10, 15, 30, 60, 120, 240)
+          apiUrl = `https://api.upbit.com/v1/candles/minutes/${interval}?market=KRW-BTC&count=200`;
+        } else {
+          // 일봉
+          apiUrl = `https://api.upbit.com/v1/candles/days?market=KRW-BTC&count=200`;
+        }
+        
+        const response = await fetch(apiUrl);
         const upbitData = await response.json();
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const mappedData: CandlestickData[] = upbitData.map((candle: any) => {
-          // 5분봉은 Unix timestamp로, 일봉은 날짜 문자열로
+          // 분봉은 Unix timestamp로, 일봉은 날짜 문자열로
           let timeValue: Time;
-          if (interval === '5') {
-            // 5분봉: Unix timestamp (초 단위)
+          if (isMinuteCandle) {
+            // 분봉: Unix timestamp (초 단위)
             const date = new Date(candle.candle_date_time_kst + '+09:00');
             timeValue = Math.floor(date.getTime() / 1000) as Time;
           } else {
@@ -161,8 +183,16 @@ export function LightweightChartsWidget({
   }
 
   return (
-    <div className="w-full" style={{ height }}>
-      <div ref={chartContainerRef} className="w-full h-full" />
+    <div className="w-full min-w-0" style={{ height, position: 'relative' }}>
+      <div ref={chartContainerRef} className="w-full h-full" style={{ width: '100%', height: '100%' }} />
+      <style jsx global>{`
+        .tv-lightweight-charts {
+          right: 0 !important;
+        }
+        .tv-lightweight-charts__pane {
+          overflow: hidden !important;
+        }
+      `}</style>
     </div>
   );
 }

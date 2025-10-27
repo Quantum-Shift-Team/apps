@@ -22,8 +22,8 @@ export default function AITradingPage() {
         </div>
 
         {/* AI 트레이딩 박스 */}
-        <div className="bg-gray-800 rounded-lg overflow-hidden">
-ㅏ고           <LightweightChartsWidget 
+        <div className="bg-gray-800 rounded-lg px-2 py-2">
+          <LightweightChartsWidget 
             symbol="BTC/KRW" 
             theme="dark" 
             interval={selectedInterval}
