@@ -180,9 +180,13 @@ export function LightweightChartsWidget({
     // 차트 크기 조정
     const handleResize = () => {
       if (chartContainerRef.current && chartRef.current) {
-        chartRef.current.applyOptions({
-          width: chartContainerRef.current.clientWidth,
-        });
+        try {
+          chartRef.current.applyOptions({
+            width: chartContainerRef.current.clientWidth,
+          });
+        } catch (error) {
+          console.error('Error resizing chart:', error);
+        }
       }
     };
 
@@ -190,21 +194,20 @@ export function LightweightChartsWidget({
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      if (chartRef.current) {
-        chartRef.current.remove();
+      try {
+        if (chartRef.current) {
+          chartRef.current.remove();
+        }
+      } catch (error) {
+        console.error('Error removing chart:', error);
       }
+      chartRef.current = null;
+      seriesRef.current = null;
     };
-  }, [isMounted, theme, height, targetPrice, interval]);
+  }, [isMounted, theme, height, targetPrice, interval, onPriceUpdate]);
 
   if (!isMounted) {
-    return (
-      <div 
-        className="flex items-center justify-center bg-gray-800 rounded-lg"
-        style={{ height, width: "100%" }}
-      >
-        <div className="text-gray-400">차트 로딩 중...</div>
-      </div>
-    );
+    return null;
   }
 
   return (

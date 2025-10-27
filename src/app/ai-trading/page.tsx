@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { TimeIntervalSelector, LightweightChartsWidget } from "@/components/tradingview";
 
 export default function AITradingPage() {
@@ -10,24 +10,27 @@ export default function AITradingPage() {
   const [priceChange, setPriceChange] = useState<number | null>(null);
   const [priceChangePercent, setPriceChangePercent] = useState<number | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
-  const usdWsRef = useRef<WebSocket | null>(null);
 
   const handleIntervalChange = (interval: string) => {
     setSelectedInterval(interval);
   };
 
-  const handlePriceUpdate = (price: number) => {
+  const handlePriceUpdate = useCallback((price: number) => {
     setCurrentPrice(price);
-  };
+  }, []);
 
   // 업비트 WebSocket 연결
   useEffect(() => {
-    // KRW-BTC WebSocket 연결
+    // 단일 WebSocket 연결로 두 티커 모두 구독
     const ws = new WebSocket('wss://api.upbit.com/websocket/v1');
     
     ws.onopen = () => {
-      // 틱 데이터 구독
-      const subscribeMessage = [{"ticket":"test"},{"type":"ticker","codes":["KRW-BTC"]}];
+      console.log('WebSocket connected');
+      // 두 티커 모두 구독
+      const subscribeMessage = [
+        {"ticket":"test"},
+        {"type":"ticker","codes":["KRW-BTC","USDT-BTC"]}
+      ];
       ws.send(JSON.stringify(subscribeMessage));
     };
 
@@ -36,10 +39,14 @@ export default function AITradingPage() {
       reader.onload = () => {
         try {
           const data = JSON.parse(reader.result as string);
-          if (data.type === 'ticker' && data.code === 'KRW-BTC') {
-            setCurrentPrice(data.trade_price);
-            setPriceChange(data.signed_change_price);
-            setPriceChangePercent(data.signed_change_rate);
+          if (data.type === 'ticker') {
+            if (data.code === 'KRW-BTC') {
+              setCurrentPrice(data.trade_price);
+              setPriceChange(data.signed_change_price);
+              setPriceChangePercent(data.signed_change_rate);
+            } else if (data.code === 'USDT-BTC') {
+              setCurrentPriceUSD(data.trade_price);
+            }
           }
         } catch (error) {
           console.error('Failed to parse WebSocket message:', error);
@@ -49,47 +56,21 @@ export default function AITradingPage() {
     };
 
     ws.onerror = (error) => {
-      console.error('WebSocket error:', error);
+      // WebSocket 에러는 연결 실패 시 발생할 수 있음
+      // onclose 핸들러에서 재연결을 시도하므로 여기서는 로깅만
+      console.warn('WebSocket connection error');
+    };
+    
+    ws.onclose = () => {
+      console.log('WebSocket connection closed');
     };
 
     wsRef.current = ws;
-
-    // USD/BTC WebSocket 연결
-    const usdWs = new WebSocket('wss://api.upbit.com/websocket/v1');
-    
-    usdWs.onopen = () => {
-      const subscribeMessage = [{"ticket":"usd"},{"type":"ticker","codes":["USDT-BTC"]}];
-      usdWs.send(JSON.stringify(subscribeMessage));
-    };
-
-    usdWs.onmessage = async (event) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        try {
-          const data = JSON.parse(reader.result as string);
-          if (data.type === 'ticker' && data.code === 'USDT-BTC') {
-            setCurrentPriceUSD(data.trade_price);
-          }
-        } catch (error) {
-          console.error('Failed to parse USD WebSocket message:', error);
-        }
-      };
-      reader.readAsText(event.data);
-    };
-
-    usdWs.onerror = (error) => {
-      console.error('USD WebSocket error:', error);
-    };
-
-    usdWsRef.current = usdWs;
 
     // 컴포넌트 언마운트 시 연결 종료
     return () => {
       if (wsRef.current) {
         wsRef.current.close();
-      }
-      if (usdWsRef.current) {
-        usdWsRef.current.close();
       }
     };
   }, []);
