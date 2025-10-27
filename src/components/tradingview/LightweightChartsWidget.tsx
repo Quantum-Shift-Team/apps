@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { createChart, IChartApi, CandlestickData, Time, CandlestickSeries } from 'lightweight-charts';
+import { UPBIT_API, PRICE_LINE_CONFIG, calculatePrice } from '@/lib/tradingConfig';
 
 interface LightweightChartsWidgetProps {
   symbol?: string;
@@ -10,13 +11,15 @@ interface LightweightChartsWidgetProps {
   interval?: string;
   locale?: 'ko' | 'en';
   targetPrice?: number; // 목표 가격 (수평선 표시할 가격)
+  onPriceUpdate?: (price: number) => void; // 현재 가격 업데이트 콜백
 }
 
 export function LightweightChartsWidget({
   theme = "dark",
   height = "300px",
   interval = "1D",
-  targetPrice
+  targetPrice,
+  onPriceUpdate
 }: LightweightChartsWidgetProps) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
@@ -87,10 +90,10 @@ export function LightweightChartsWidget({
         let apiUrl = '';
         if (isMinuteCandle) {
           // 분봉 (1, 3, 5, 10, 15, 30, 60, 120, 240)
-          apiUrl = `https://api.upbit.com/v1/candles/minutes/${interval}?market=KRW-BTC&count=200`;
+          apiUrl = `${UPBIT_API.BASE_URL}${UPBIT_API.CANDLES.MINUTES}/${interval}?market=${UPBIT_API.MARKET}&count=${UPBIT_API.COUNT}`;
         } else {
           // 일봉
-          apiUrl = `https://api.upbit.com/v1/candles/days?market=KRW-BTC&count=200`;
+          apiUrl = `${UPBIT_API.BASE_URL}${UPBIT_API.CANDLES.DAYS}?market=${UPBIT_API.MARKET}&count=${UPBIT_API.COUNT}`;
         }
         
         const response = await fetch(apiUrl);
@@ -138,36 +141,31 @@ export function LightweightChartsWidget({
           const latestPrice = uniqueData[uniqueData.length - 1].close;
           setCurrentPrice(latestPrice);
           
+          // 부모 컴포넌트에 현재 가격 전달
+          if (onPriceUpdate) {
+            onPriceUpdate(latestPrice);
+          }
+          
+          // 가격 계산
+          const prices = calculatePrice(latestPrice);
+
           // 가격 라인 추가
-          const entryPrice = latestPrice * 0.995; // -0.5%
-          const stopLossPrice = latestPrice * 0.99; // -1%
-          const takeProfitPrice1 = latestPrice * 1.01; // +1%
-
           candlestickSeries.createPriceLine({
-            price: entryPrice,
-            color: '#2196f3',
-            lineWidth: 2,
-            lineStyle: 2,
-            axisLabelVisible: true,
-            title: `진입가: ₩${Math.round(entryPrice).toLocaleString()}`,
+            price: prices.entry,
+            ...PRICE_LINE_CONFIG.ENTRY,
+            title: `진입가: ₩${Math.round(prices.entry).toLocaleString()}`,
           });
 
           candlestickSeries.createPriceLine({
-            price: stopLossPrice,
-            color: '#ef5350',
-            lineWidth: 2,
-            lineStyle: 2,
-            axisLabelVisible: true,
-            title: `손절가: ₩${Math.round(stopLossPrice).toLocaleString()}`,
+            price: prices.stopLoss,
+            ...PRICE_LINE_CONFIG.STOP_LOSS,
+            title: `손절가: ₩${Math.round(prices.stopLoss).toLocaleString()}`,
           });
 
           candlestickSeries.createPriceLine({
-            price: takeProfitPrice1,
-            color: '#26a69a',
-            lineWidth: 2,
-            lineStyle: 2,
-            axisLabelVisible: true,
-            title: `익절가: ₩${Math.round(takeProfitPrice1).toLocaleString()}`,
+            price: prices.takeProfit,
+            ...PRICE_LINE_CONFIG.TAKE_PROFIT,
+            title: `익절가: ₩${Math.round(prices.takeProfit).toLocaleString()}`,
           });
         }
       } catch (error) {
