@@ -86,17 +86,20 @@ export function LightweightChartsWidget({
         // 분봉인지 일봉인지 판단
         const isMinuteCandle = !['D', 'W', 'M'].includes(interval);
         
-        // API URL 생성
+        // Next.js API Route를 통해 데이터 가져오기
         let apiUrl = '';
         if (isMinuteCandle) {
-          // 분봉 (1, 3, 5, 10, 15, 30, 60, 120, 240)
-          apiUrl = `${UPBIT_API.BASE_URL}${UPBIT_API.CANDLES.MINUTES}/${interval}?market=${UPBIT_API.MARKET}&count=${UPBIT_API.COUNT}`;
+          apiUrl = `/api/candles?interval=${interval}&market=${UPBIT_API.MARKET}&count=${UPBIT_API.COUNT}`;
         } else {
-          // 일봉
-          apiUrl = `${UPBIT_API.BASE_URL}${UPBIT_API.CANDLES.DAYS}?market=${UPBIT_API.MARKET}&count=${UPBIT_API.COUNT}`;
+          apiUrl = `/api/candles?interval=${interval}&market=${UPBIT_API.MARKET}&count=${UPBIT_API.COUNT}`;
         }
         
         const response = await fetch(apiUrl);
+        
+        if (!response.ok) {
+          throw new Error(`Failed to fetch: ${response.status}`);
+        }
+        
         const upbitData = await response.json();
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
