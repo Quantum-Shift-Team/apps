@@ -22,6 +22,7 @@ export function LightweightChartsWidget({
   const chartRef = useRef<IChartApi | null>(null);
   const seriesRef = useRef<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
   const [isMounted, setIsMounted] = useState(false);
+  const [currentPrice, setCurrentPrice] = useState<number | null>(null);
 
   useEffect(() => {
     setIsMounted(true);
@@ -131,6 +132,44 @@ export function LightweightChartsWidget({
         });
 
         candlestickSeries.setData(uniqueData);
+        
+        // 현재 가격 가져오기 (가장 최근 종가)
+        if (uniqueData.length > 0) {
+          const latestPrice = uniqueData[uniqueData.length - 1].close;
+          setCurrentPrice(latestPrice);
+          
+          // 가격 라인 추가
+          const entryPrice = latestPrice * 0.995; // -0.5%
+          const stopLossPrice = latestPrice * 0.99; // -1%
+          const takeProfitPrice1 = latestPrice * 1.01; // +1%
+
+          candlestickSeries.createPriceLine({
+            price: entryPrice,
+            color: '#2196f3',
+            lineWidth: 2,
+            lineStyle: 2,
+            axisLabelVisible: true,
+            title: `진입가: ₩${Math.round(entryPrice).toLocaleString()}`,
+          });
+
+          candlestickSeries.createPriceLine({
+            price: stopLossPrice,
+            color: '#ef5350',
+            lineWidth: 2,
+            lineStyle: 2,
+            axisLabelVisible: true,
+            title: `손절가: ₩${Math.round(stopLossPrice).toLocaleString()}`,
+          });
+
+          candlestickSeries.createPriceLine({
+            price: takeProfitPrice1,
+            color: '#26a69a',
+            lineWidth: 2,
+            lineStyle: 2,
+            axisLabelVisible: true,
+            title: `익절가: ₩${Math.round(takeProfitPrice1).toLocaleString()}`,
+          });
+        }
       } catch (error) {
         console.error('Failed to fetch candle data:', error);
         // 실패 시 빈 데이터로 처리
@@ -139,18 +178,6 @@ export function LightweightChartsWidget({
     };
 
     fetchCandles();
-
-    // 목표 가격 라인 추가
-    if (targetPrice) {
-      candlestickSeries.createPriceLine({
-        price: targetPrice,
-        color: '#2196f3',
-        lineWidth: 2,
-        lineStyle: 2, // Dashed line
-        axisLabelVisible: true,
-        title: `₩${targetPrice.toLocaleString()}`,
-      });
-    }
 
     // 차트 크기 조정
     const handleResize = () => {
