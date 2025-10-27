@@ -1,0 +1,168 @@
+"use client";
+
+import React, { useEffect, useRef, useState } from 'react';
+import { createChart, IChartApi, CandlestickData, Time, CandlestickSeries } from 'lightweight-charts';
+
+interface LightweightChartsWidgetProps {
+  symbol?: string;
+  theme?: 'light' | 'dark';
+  height?: string;
+  interval?: string;
+  locale?: 'ko' | 'en';
+  targetPrice?: number; // 목표 가격 (수평선 표시할 가격)
+}
+
+export function LightweightChartsWidget({
+  theme = "dark",
+  height = "400px",
+  interval = "1D",
+  targetPrice
+}: LightweightChartsWidgetProps) {
+  const chartContainerRef = useRef<HTMLDivElement>(null);
+  const chartRef = useRef<IChartApi | null>(null);
+  const seriesRef = useRef<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isMounted || !chartContainerRef.current) return;
+
+    // 차트 생성
+    const chart = createChart(chartContainerRef.current, {
+      width: chartContainerRef.current.clientWidth,
+      height: parseInt(height) || 400,
+      layout: {
+        background: { color: theme === 'dark' ? '#1a1a1a' : '#ffffff' },
+        textColor: theme === 'dark' ? '#ffffff' : '#191919',
+      },
+      grid: {
+        vertLines: { color: theme === 'dark' ? '#2a2a2a' : '#e0e0e0' },
+        horzLines: { color: theme === 'dark' ? '#2a2a2a' : '#e0e0e0' },
+      },
+      localization: {
+        priceFormatter: (price: number) => {
+          return `₩${price.toLocaleString('ko-KR')}`;
+        },
+      },
+    });
+
+    chartRef.current = chart;
+
+    // 캔들스틱 시리즈 생성
+    const candlestickSeries = chart.addSeries(CandlestickSeries, {
+      upColor: '#26a69a',
+      downColor: '#ef5350',
+      borderVisible: false,
+      wickUpColor: '#26a69a',
+      wickDownColor: '#ef5350',
+    });
+    
+    seriesRef.current = candlestickSeries;
+
+    // 업비트 API에서 실시간 데이터 가져오기
+    const fetchCandles = async () => {
+      try {
+        // 업비트 캔들 API
+        const response = await fetch(
+          `https://api.upbit.com/v1/candles/${interval === '5' ? 'minutes' : 'days'}/${
+            interval === '5' ? '5' : '1'
+          }?market=KRW-BTC&count=200`
+        );
+        const upbitData = await response.json();
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const mappedData: CandlestickData[] = upbitData.map((candle: any) => {
+          // 5분봉은 Unix timestamp로, 일봉은 날짜 문자열로
+          let timeValue: Time;
+          if (interval === '5') {
+            // 5분봉: Unix timestamp (초 단위)
+            const date = new Date(candle.candle_date_time_kst + '+09:00');
+            timeValue = Math.floor(date.getTime() / 1000) as Time;
+          } else {
+            // 일봉: 날짜 문자열
+            timeValue = candle.candle_date_time_kst?.replace('T', ' ').slice(0, 10) as Time;
+          }
+          
+          return {
+            time: timeValue,
+            open: candle.opening_price,
+            high: candle.high_price,
+            low: candle.low_price,
+            close: candle.trade_price,
+          };
+        });
+
+        // 중복 제거 및 시간순 정렬 (오름차순)
+        const uniqueData = Array.from(
+          new Map(mappedData.map(item => [item.time, item])).values()
+        ).sort((a, b) => {
+          if (typeof a.time === 'number' && typeof b.time === 'number') {
+            return a.time - b.time; // 숫자 비교 (Unix timestamp)
+          }
+          if (typeof a.time === 'string' && typeof b.time === 'string') {
+            return a.time.localeCompare(b.time);
+          }
+          return 0;
+        });
+
+        candlestickSeries.setData(uniqueData);
+      } catch (error) {
+        console.error('Failed to fetch candle data:', error);
+        // 실패 시 빈 데이터로 처리
+        candlestickSeries.setData([]);
+      }
+    };
+
+    fetchCandles();
+
+    // 목표 가격 라인 추가
+    if (targetPrice) {
+      candlestickSeries.createPriceLine({
+        price: targetPrice,
+        color: '#2196f3',
+        lineWidth: 2,
+        lineStyle: 2, // Dashed line
+        axisLabelVisible: true,
+        title: `₩${targetPrice.toLocaleString()}`,
+      });
+    }
+
+    // 차트 크기 조정
+    const handleResize = () => {
+      if (chartContainerRef.current && chartRef.current) {
+        chartRef.current.applyOptions({
+          width: chartContainerRef.current.clientWidth,
+        });
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (chartRef.current) {
+        chartRef.current.remove();
+      }
+    };
+  }, [isMounted, theme, height, targetPrice, interval]);
+
+  if (!isMounted) {
+    return (
+      <div 
+        className="flex items-center justify-center bg-gray-800 rounded-lg"
+        style={{ height, width: "100%" }}
+      >
+        <div className="text-gray-400">차트 로딩 중...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full" style={{ height }}>
+      <div ref={chartContainerRef} className="w-full h-full" />
+    </div>
+  );
+}

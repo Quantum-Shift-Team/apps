@@ -34,14 +34,9 @@ function TradingViewWidget({
   hideSymbolInfo = true,
   hideIntervalInfo = true,
   hideCopyright = true,
-  entryPrice = 111371
 }: TradingViewWidgetProps) {
   const container = useRef<HTMLDivElement>(null);
   const [isMounted, setIsMounted] = useState(false);
-
-  // 진입가 기준으로 손절가(-3%)와 익절가(+5%) 계산
-  const stopLossPrice = entryPrice * 0.97; // -3%
-  const takeProfitPrice = entryPrice * 1.05; // +5%
 
   useEffect(() => {
     setIsMounted(true);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { TradingViewWidget, TimeIntervalSelector } from "@/components/tradingview";
+import { TradingViewWidget, TimeIntervalSelector, LightweightChartsWidget } from "@/components/tradingview";
 
 export default function AITradingPage() {
   const [selectedInterval, setSelectedInterval] = useState<'1' | '3' | '5' | '10' | '15' | '30' | '60' | '120' | '240' | 'D' | 'W' | 'M' | 'Y'>('5');
@@ -23,15 +23,12 @@ export default function AITradingPage() {
 
         {/* AI 트레이딩 박스 */}
         <div className="bg-gray-800 rounded-lg overflow-hidden">
-          <TradingViewWidget 
-            symbol="BINANCE:BTCUSDT" 
+ㅏ고           <LightweightChartsWidget 
+            symbol="BTC/KRW" 
             theme="dark" 
             interval={selectedInterval}
             locale="ko"
-            timezone="Asia/Seoul"
-            hideSymbolInfo={true}
-            hideIntervalInfo={true}
-            hideCopyright={true}
+            targetPrice={171000000}
           />
         </div>
 
