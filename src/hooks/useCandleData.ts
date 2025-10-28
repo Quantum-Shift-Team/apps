@@ -10,6 +10,12 @@ interface CandleData {
   candle_acc_trade_volume: number;
 }
 
+interface CandleResponse {
+  data: CandleData[];
+  timestamp: number;
+  cached: boolean;
+}
+
 export const useCandleData = (
   market: string,
   interval: string,
@@ -26,8 +32,8 @@ export const useCandleData = (
         throw new Error(`Failed to fetch: ${response.status}`);
       }
       
-      const data: CandleData[] = await response.json();
-      return data;
+      const result: CandleResponse = await response.json();
+      return result;
     },
     enabled,
     staleTime: 30 * 1000, // 30초

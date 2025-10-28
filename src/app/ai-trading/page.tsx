@@ -24,6 +24,7 @@ export default function AITradingPage() {
   const [cryptoPrices, setCryptoPrices] = useState<
     Record<string, CryptoPriceData>
   >({});
+  const [dataTimestamp, setDataTimestamp] = useState<number | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
   const queryClient = useQueryClient();
 
@@ -48,6 +49,10 @@ export default function AITradingPage() {
 
   const handlePriceUpdate = useCallback(() => {
     // 차트에서 업데이트된 가격을 받을 때 사용
+  }, []);
+
+  const handleTimestampUpdate = useCallback((timestamp: number) => {
+    setDataTimestamp(timestamp);
   }, []);
 
   // 모든 코인 가격을 관리하는 상태를 업데이트
@@ -183,6 +188,16 @@ export default function AITradingPage() {
       <div className="px-6">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold text-white">{cryptoInfo.name}</h1>
+          {dataTimestamp && (
+            <span className="text-xs text-gray-500">
+              데이터:{" "}
+              {new Date(dataTimestamp).toLocaleTimeString("ko-KR", {
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+              })}
+            </span>
+          )}
         </div>
         {currentPriceData && (
           <div>
@@ -238,6 +253,7 @@ export default function AITradingPage() {
         interval={selectedInterval}
         locale="ko"
         onPriceUpdate={handlePriceUpdate}
+        onTimestampUpdate={handleTimestampUpdate}
       />
 
       {/* 시간대 선택 버튼 */}

@@ -18,7 +18,11 @@ export async function GET(request: NextRequest) {
   const cached = cache.get(cacheKey);
   if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
     console.log('Cache hit for:', cacheKey);
-    return NextResponse.json(cached.data);
+    return NextResponse.json({
+      data: cached.data,
+      timestamp: cached.timestamp,
+      cached: true
+    });
   }
 
   try {
@@ -42,11 +46,16 @@ export async function GET(request: NextRequest) {
     }
 
     const data = await response.json();
+    const timestamp = Date.now();
     
     // 인메모리 캐시에 저장
-    cache.set(cacheKey, { data, timestamp: Date.now() });
+    cache.set(cacheKey, { data, timestamp });
     
-    return NextResponse.json(data);
+    return NextResponse.json({
+      data,
+      timestamp,
+      cached: false
+    });
   } catch (error) {
     console.error('API Error:', error);
     return NextResponse.json(

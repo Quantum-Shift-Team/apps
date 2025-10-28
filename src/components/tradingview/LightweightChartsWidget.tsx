@@ -19,6 +19,7 @@ interface LightweightChartsWidgetProps {
   interval?: string;
   locale?: "ko" | "en";
   onPriceUpdate?: (price: number) => void; // 현재 가격 업데이트 콜백
+  onTimestampUpdate?: (timestamp: number) => void; // 데이터 타임스탬프 업데이트
 }
 
 export function LightweightChartsWidget({
@@ -27,6 +28,7 @@ export function LightweightChartsWidget({
   height = "300px",
   interval = "1D",
   onPriceUpdate,
+  onTimestampUpdate,
 }: LightweightChartsWidgetProps) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
@@ -50,7 +52,7 @@ export function LightweightChartsWidget({
   const market = getMarketFromSymbol(symbol);
 
   // useQuery로 차트 데이터 가져오기
-  const { data: upbitData, isLoading } = useCandleData(
+  const { data: candleResponse, isLoading } = useCandleData(
     market,
     interval,
     isMounted
@@ -116,7 +118,14 @@ export function LightweightChartsWidget({
 
     // 데이터 처리 함수
     const processCandleData = () => {
-      if (!upbitData || isLoading) return;
+      if (!candleResponse || isLoading) return;
+
+      const upbitData = candleResponse.data;
+
+      // 타임스탬프 부모에게 전달
+      if (onTimestampUpdate && candleResponse.timestamp) {
+        onTimestampUpdate(candleResponse.timestamp);
+      }
 
       try {
         // 분봉인지 일봉인지 판단
@@ -256,7 +265,8 @@ export function LightweightChartsWidget({
     interval,
     symbol,
     onPriceUpdate,
-    upbitData,
+    onTimestampUpdate,
+    candleResponse,
     isLoading,
     market,
   ]);
