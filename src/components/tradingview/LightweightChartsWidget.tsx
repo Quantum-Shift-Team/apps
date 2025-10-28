@@ -32,7 +32,6 @@ export function LightweightChartsWidget({
   const chartRef = useRef<IChartApi | null>(null);
   const seriesRef = useRef<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
   const [isMounted, setIsMounted] = useState(false);
-  const [currentPrice, setCurrentPrice] = useState<number | null>(null);
 
   // symbol을 market 형식으로 변환: "BTC/KRW" -> "KRW-BTC"
   const getMarketFromSymbol = (sym?: string) => {
@@ -165,7 +164,6 @@ export function LightweightChartsWidget({
         // 현재 가격 가져오기 (가장 최근 종가)
         if (uniqueData.length > 0) {
           const latestPrice = uniqueData[uniqueData.length - 1].close;
-          setCurrentPrice(latestPrice);
 
           // 부모 컴포넌트에 현재 가격 전달
           if (onPriceUpdate) {

@@ -12,10 +12,18 @@ import {
   getCryptoInfo,
 } from "@/lib/cryptoConfig";
 
+interface CryptoPriceData {
+  trade_price: number;
+  signed_change_price: number;
+  signed_change_rate: number;
+}
+
 export default function AITradingPage() {
   const [selectedCrypto, setSelectedCrypto] = useState<string>(DEFAULT_CRYPTO);
   const [selectedInterval, setSelectedInterval] = useState<string>("15");
-  const [cryptoPrices, setCryptoPrices] = useState<Record<string, any>>({});
+  const [cryptoPrices, setCryptoPrices] = useState<
+    Record<string, CryptoPriceData>
+  >({});
   const wsRef = useRef<WebSocket | null>(null);
   const queryClient = useQueryClient();
 
@@ -38,12 +46,12 @@ export default function AITradingPage() {
     });
   };
 
-  const handlePriceUpdate = useCallback((price: number) => {
+  const handlePriceUpdate = useCallback(() => {
     // 차트에서 업데이트된 가격을 받을 때 사용
   }, []);
 
   // 모든 코인 가격을 관리하는 상태를 업데이트
-  const updateCryptoPrice = (code: string, data: any) => {
+  const updateCryptoPrice = (code: string, data: CryptoPriceData) => {
     setCryptoPrices((prev) => ({
       ...prev,
       [code]: data,
@@ -127,7 +135,7 @@ export default function AITradingPage() {
       reader.readAsText(event.data);
     };
 
-    ws.onerror = (error) => {
+    ws.onerror = () => {
       console.warn("WebSocket connection error");
     };
 
