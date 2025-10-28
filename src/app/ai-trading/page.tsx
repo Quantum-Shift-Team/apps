@@ -168,12 +168,12 @@ export default function AITradingPage() {
   return (
     <div className="px-0 py-6 space-y-4">
       {/* 코인 선택 버튼 */}
-      <div className="px-6 flex gap-2">
+      <div className="px-6 flex gap-1.5">
         {Object.keys(CRYPTO_CURRENCIES).map((key) => (
           <button
             key={key}
             onClick={() => setSelectedCrypto(key)}
-            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
               selectedCrypto === key
                 ? "bg-blue-600 text-white"
                 : "bg-gray-800 text-gray-400 hover:bg-gray-700"
