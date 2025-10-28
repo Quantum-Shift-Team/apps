@@ -8,11 +8,8 @@ import {
   Time,
   CandlestickSeries,
 } from "lightweight-charts";
-import {
-  UPBIT_API,
-  PRICE_LINE_CONFIG,
-  calculatePrice,
-} from "@/lib/tradingConfig";
+import { UPBIT_API, PRICE_LINE_CONFIG } from "@/lib/tradingConfig";
+import { CRYPTO_CURRENCIES } from "@/lib/cryptoConfig";
 
 interface LightweightChartsWidgetProps {
   symbol?: string;
@@ -181,12 +178,22 @@ export function LightweightChartsWidget({
             onPriceUpdate(latestPrice);
           }
 
-          // 가격 계산
-          const prices = calculatePrice(latestPrice);
+          // 가격 계산 (코인별 설정 사용)
+          const coin = getCoinFromSymbol(symbol);
+          const priceConfig = CRYPTO_CURRENCIES[coin]?.priceConfig || {
+            entryPercent: 0.998,
+            stopLossPercent: 0.995,
+            takeProfitPercent: 1.008,
+          };
+
+          const prices = {
+            entry: latestPrice * priceConfig.entryPercent,
+            stopLoss: latestPrice * priceConfig.stopLossPercent,
+            takeProfit: latestPrice * priceConfig.takeProfitPercent,
+          };
 
           // 가격 포맷팅 함수
           const formatPriceLine = (price: number) => {
-            const coin = getCoinFromSymbol(symbol);
             if (coin === "BTC" || coin === "ETH") {
               const manWon = Math.round(price / 10000);
               return `₩${manWon}만`;
