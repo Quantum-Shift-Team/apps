@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { db } from "@/lib/db";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -22,6 +23,10 @@ export async function GET(request: NextRequest) {
     const kakaoRestApiKey = process.env.KAKAO_REST_API_KEY;
     const kakaoRedirectUri = process.env.KAKAO_REDIRECT_URI || `${request.nextUrl.origin}/api/auth/kakao`;
 
+    console.log("Kakao Login - KAKAO_REST_API_KEY:", kakaoRestApiKey?.substring(0, 5) + "...");
+    console.log("Kakao Login - Redirect URI:", kakaoRedirectUri);
+    console.log("Kakao Login - Code:", code);
+
     if (!kakaoRestApiKey) {
       throw new Error("KAKAO_REST_API_KEY is not set");
     }
@@ -43,6 +48,8 @@ export async function GET(request: NextRequest) {
     if (!tokenResponse.ok) {
       const errorText = await tokenResponse.text();
       console.error("Kakao token error:", errorText);
+      console.error("Status:", tokenResponse.status);
+      console.error("KAKAO_REST_API_KEY:", kakaoRestApiKey?.substring(0, 5) + "...");
       throw new Error("Failed to get token");
     }
 
@@ -63,18 +70,29 @@ export async function GET(request: NextRequest) {
 
     const userData = await userResponse.json();
 
-    // 세션 생성 (실제 구현에서는 JWT 또는 세션 저장소 사용)
-    // 여기서는 간단하게 쿠키에 저장
+    // DB에 사용자 저장 또는 업데이트
+    const user = await db.user.upsert({
+      where: { kakaoId: userData.id.toString() },
+      update: {
+        nickname: userData.kakao_account.profile?.nickname,
+        email: userData.kakao_account.email,
+        profileImage: userData.kakao_account.profile?.profile_image_url,
+      },
+      create: {
+        kakaoId: userData.id.toString(),
+        nickname: userData.kakao_account.profile?.nickname,
+        email: userData.kakao_account.email,
+        profileImage: userData.kakao_account.profile?.profile_image_url,
+      },
+    });
+
+    // 세션 생성
     const response = NextResponse.redirect(
       new URL("/", request.url)
     );
 
-    // 사용자 정보를 쿠키에 저장 (실제로는 암호화되어야 함)
-    response.cookies.set("kakao_user", JSON.stringify({
-      id: userData.id,
-      nickname: userData.kakao_account.profile?.nickname,
-      profile_image: userData.kakao_account.profile?.profile_image_url,
-    }), {
+    // DB의 user id를 쿠키에 저장
+    response.cookies.set("user_id", user.id, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",

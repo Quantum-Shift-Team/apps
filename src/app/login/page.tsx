@@ -8,17 +8,19 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
 
-  const handleKakaoLogin = () => {
-    const kakaoJsKey = process.env.NEXT_PUBLIC_KAKAO_JS_KEY;
-    const redirectUri = `${window.location.origin}/api/auth/kakao`;
-    
-    if (!kakaoJsKey) {
+  const handleKakaoLogin = async () => {
+    try {
+      const response = await fetch("/api/auth/kakao/init");
+      const data = await response.json();
+      
+      if (data.authUrl) {
+        window.location.href = data.authUrl;
+      } else {
+        alert("카카오 로그인에 실패했습니다.");
+      }
+    } catch {
       alert("카카오 로그인이 설정되지 않았습니다.");
-      return;
     }
-
-    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${kakaoJsKey}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code`;
-    window.location.href = kakaoAuthUrl;
   };
   return (
     <div className="min-h-screen bg-gray-900">
