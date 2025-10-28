@@ -271,8 +271,101 @@ export function LightweightChartsWidget({
     market,
   ]);
 
-  if (!isMounted) {
-    return null;
+  // 로딩 placeholder 컴포넌트
+  const ChartSkeleton = () => {
+    const shimmerStyle = {
+      background:
+        "linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%)",
+      backgroundSize: "200% 100%",
+      animation: "shimmer 1.5s infinite",
+    };
+
+    return (
+      <div
+        className="w-full bg-gray-900 rounded-lg overflow-hidden"
+        style={{ height, minHeight: height }}
+      >
+        <style jsx>{`
+          @keyframes shimmer {
+            0% {
+              background-position: -200% 0;
+            }
+            100% {
+              background-position: 200% 0;
+            }
+          }
+          .shimmer {
+            animation: shimmer 1.5s infinite;
+          }
+        `}</style>
+
+        {/* 차트 헤더 */}
+        <div className="flex justify-between items-center px-4 py-3 border-b border-gray-700">
+          <div className="h-4 rounded w-32 shimmer" style={shimmerStyle}></div>
+          <div className="h-4 rounded w-24 shimmer" style={shimmerStyle}></div>
+        </div>
+
+        {/* 차트 영역 - 캔들스틱 패턴 */}
+        <div className="relative h-full px-4 py-6">
+          {/* Y축 가격 */}
+          <div className="absolute right-4 top-0 space-y-4">
+            {[0, 1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="h-2 rounded w-16 shimmer"
+                style={{ ...shimmerStyle, animationDelay: `${i * 0.1}s` }}
+              ></div>
+            ))}
+          </div>
+
+          {/* X축 시간 */}
+          <div className="absolute bottom-0 left-4 right-4 flex justify-between">
+            {[0, 1, 2, 3, 4, 5].map((i) => (
+              <div
+                key={i}
+                className="h-2 rounded w-12 shimmer"
+                style={{ ...shimmerStyle, animationDelay: `${i * 0.15}s` }}
+              ></div>
+            ))}
+          </div>
+
+          {/* 캔들스틱 차트 영역 */}
+          <div className="h-full flex items-center justify-around py-8">
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => {
+              const randomHeight = Math.random() * 30 + 20;
+              return (
+                <div key={i} className="flex flex-col items-center gap-1">
+                  {/* 위심 (wick) */}
+                  <div
+                    className="h-4 w-px shimmer"
+                    style={{ ...shimmerStyle, animationDelay: `${i * 0.05}s` }}
+                  ></div>
+                  {/* 몸통 (body) - 높이가 랜덤하게 */}
+                  <div
+                    className="w-12 shimmer border border-gray-600/20"
+                    style={{
+                      height: `${randomHeight}%`,
+                      animationDelay: `${i * 0.05}s`,
+                      background:
+                        "linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(239, 68, 68, 0.15) 100%)",
+                    }}
+                  ></div>
+                  {/* 아래심 (wick) */}
+                  <div
+                    className="h-4 w-px shimmer"
+                    style={{ ...shimmerStyle, animationDelay: `${i * 0.05}s` }}
+                  ></div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  if (!isMounted || isLoading) {
+    return <ChartSkeleton />;
   }
 
   return (
