@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   TimeIntervalSelector,
   LightweightChartsWidget,
@@ -16,9 +17,25 @@ export default function AITradingPage() {
   const [selectedInterval, setSelectedInterval] = useState<string>("15");
   const [cryptoPrices, setCryptoPrices] = useState<Record<string, any>>({});
   const wsRef = useRef<WebSocket | null>(null);
+  const queryClient = useQueryClient();
 
   const handleIntervalChange = (interval: string) => {
     setSelectedInterval(interval);
+
+    // 선택한 시간대의 모든 코인 데이터 프리패치
+    const fetchCandleData = async (market: string, interval: string) => {
+      const apiUrl = `/api/candles?interval=${interval}&market=${market}&count=200`;
+      return fetch(apiUrl).then((res) => res.json());
+    };
+
+    // 모든 코인에 대해 선택된 시간대 데이터 prefetch
+    Object.values(CRYPTO_CURRENCIES).forEach((crypto) => {
+      queryClient.prefetchQuery({
+        queryKey: ["candles", crypto.code, interval],
+        queryFn: () => fetchCandleData(crypto.code, interval),
+        staleTime: 30 * 1000,
+      });
+    });
   };
 
   const handlePriceUpdate = useCallback((price: number) => {
@@ -32,6 +49,43 @@ export default function AITradingPage() {
       [code]: data,
     }));
   };
+
+  // 페이지 진입 시 데이터 프리패치
+  useEffect(() => {
+    const fetchCandleData = async (market: string, interval: string) => {
+      const apiUrl = `/api/candles?interval=${interval}&market=${market}&count=200`;
+      return fetch(apiUrl).then((res) => res.json());
+    };
+
+    const prefetchData = async () => {
+      // 모든 시간대 배열
+      const intervals = ["1", "3", "5", "15", "30", "60", "240", "D"];
+
+      // BTC - 모든 시간대 prefetch
+      for (const interval of intervals) {
+        queryClient.prefetchQuery({
+          queryKey: ["candles", "KRW-BTC", interval],
+          queryFn: () => fetchCandleData("KRW-BTC", interval),
+          staleTime: 30 * 1000,
+        });
+      }
+
+      // 다른 코인들 - 15분봉만 prefetch
+      const otherCoins = ["SOL", "ETH", "DOGE"];
+      for (const coin of otherCoins) {
+        const crypto = CRYPTO_CURRENCIES[coin];
+        if (crypto) {
+          queryClient.prefetchQuery({
+            queryKey: ["candles", crypto.code, "15"],
+            queryFn: () => fetchCandleData(crypto.code, "15"),
+            staleTime: 30 * 1000,
+          });
+        }
+      }
+    };
+
+    prefetchData();
+  }, [queryClient]);
 
   // 업비트 WebSocket 연결 - 한 번만 연결하여 모든 코인 구독
   useEffect(() => {

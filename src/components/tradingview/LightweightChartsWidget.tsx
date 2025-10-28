@@ -8,8 +8,9 @@ import {
   Time,
   CandlestickSeries,
 } from "lightweight-charts";
-import { UPBIT_API, PRICE_LINE_CONFIG } from "@/lib/tradingConfig";
+import { PRICE_LINE_CONFIG } from "@/lib/tradingConfig";
 import { CRYPTO_CURRENCIES } from "@/lib/cryptoConfig";
+import { useCandleData } from "@/hooks/useCandleData";
 
 interface LightweightChartsWidgetProps {
   symbol?: string;
@@ -35,7 +36,7 @@ export function LightweightChartsWidget({
 
   // symbol을 market 형식으로 변환: "BTC/KRW" -> "KRW-BTC"
   const getMarketFromSymbol = (sym?: string) => {
-    if (!sym) return UPBIT_API.MARKET; // 기본값
+    if (!sym) return "KRW-BTC"; // 기본값
     const [coin, currency] = sym.split("/");
     return `${currency}-${coin}`;
   };
@@ -45,6 +46,16 @@ export function LightweightChartsWidget({
     if (!sym) return "";
     return sym.split("/")[0];
   };
+
+  // symbol을 market으로 변환: "BTC/KRW" -> "KRW-BTC"
+  const market = getMarketFromSymbol(symbol);
+
+  // useQuery로 차트 데이터 가져오기
+  const { data: upbitData, isLoading } = useCandleData(
+    market,
+    interval,
+    isMounted
+  );
 
   useEffect(() => {
     setIsMounted(true);
@@ -104,30 +115,13 @@ export function LightweightChartsWidget({
 
     seriesRef.current = candlestickSeries;
 
-    // 업비트 API에서 실시간 데이터 가져오기
-    const fetchCandles = async () => {
-      try {
-        // symbol을 market으로 변환
-        const market = getMarketFromSymbol(symbol);
+    // 데이터 처리 함수
+    const processCandleData = () => {
+      if (!upbitData || isLoading) return;
 
+      try {
         // 분봉인지 일봉인지 판단
         const isMinuteCandle = !["D", "W", "M"].includes(interval);
-
-        // Next.js API Route를 통해 데이터 가져오기
-        let apiUrl = "";
-        if (isMinuteCandle) {
-          apiUrl = `/api/candles?interval=${interval}&market=${market}&count=${UPBIT_API.COUNT}`;
-        } else {
-          apiUrl = `/api/candles?interval=${interval}&market=${market}&count=${UPBIT_API.COUNT}`;
-        }
-
-        const response = await fetch(apiUrl);
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch: ${response.status}`);
-        }
-
-        const upbitData = await response.json();
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const mappedData: CandlestickData[] = upbitData.map((candle: any) => {
@@ -221,13 +215,14 @@ export function LightweightChartsWidget({
           });
         }
       } catch (error) {
-        console.error("Failed to fetch candle data:", error);
+        console.error("Failed to process candle data:", error);
         // 실패 시 빈 데이터로 처리
         candlestickSeries.setData([]);
       }
     };
 
-    fetchCandles();
+    // 데이터가 있으면 처리
+    processCandleData();
 
     // 차트 크기 조정
     const handleResize = () => {
@@ -256,7 +251,17 @@ export function LightweightChartsWidget({
       chartRef.current = null;
       seriesRef.current = null;
     };
-  }, [isMounted, theme, height, interval, symbol, onPriceUpdate]);
+  }, [
+    isMounted,
+    theme,
+    height,
+    interval,
+    symbol,
+    onPriceUpdate,
+    upbitData,
+    isLoading,
+    market,
+  ]);
 
   if (!isMounted) {
     return null;

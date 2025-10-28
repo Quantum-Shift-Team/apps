@@ -29,4 +29,4 @@ export const PRICE_LINE_CONFIG = {
     lineStyle: 2,
     axisLabelVisible: true,
   },
-} as const;
+} as const; 
