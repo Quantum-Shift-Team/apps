@@ -273,6 +273,14 @@ export function LightweightChartsWidget({
 
   // 로딩 placeholder 컴포넌트
   const ChartSkeleton = () => {
+    const [randomHeights, setRandomHeights] = useState<number[]>([]);
+
+    // 클라이언트에서만 랜덤 높이 생성
+    useEffect(() => {
+      const heights = Array.from({ length: 10 }, () => Math.random() * 30 + 20);
+      setRandomHeights(heights);
+    }, []);
+
     const shimmerStyle = {
       background:
         "linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%)",
@@ -332,7 +340,7 @@ export function LightweightChartsWidget({
           {/* 캔들스틱 차트 영역 */}
           <div className="h-full flex items-center justify-around py-8">
             {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => {
-              const randomHeight = Math.random() * 30 + 20;
+              const randomHeight = randomHeights[i] || 25; // 기본값 25%
               return (
                 <div key={i} className="flex flex-col items-center gap-1">
                   {/* 위심 (wick) */}
