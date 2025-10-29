@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import Image from "next/image";
 import { BackHeader } from "@/components/layout/BackHeader";
 import { db } from "@/lib/db";
+import { UidSection } from "@/components/ui/UidSection";
 
 export default async function MyPage() {
   const cookieStore = await cookies();
@@ -44,64 +45,74 @@ export default async function MyPage() {
         <div className="max-w-2xl mx-auto">
           <h1 className="text-3xl font-bold text-white mb-8">마이페이지</h1>
 
-        <div className="bg-gray-800 rounded-lg p-8 space-y-6">
-          {/* 프로필 이미지 */}
-          {user.profileImage && (
-            <div className="flex justify-center">
-              <Image
-                src={user.profileImage}
-                alt="프로필"
-                width={128}
-                height={128}
-                className="w-32 h-32 rounded-full object-cover"
-                unoptimized
-              />
-            </div>
-          )}
+          <div className="bg-gray-800 rounded-lg p-8 space-y-6">
+            {/* 프로필 이미지 */}
+            {user.profileImage && (
+              <div className="flex justify-center">
+                <Image
+                  src={user.profileImage}
+                  alt="프로필"
+                  width={128}
+                  height={128}
+                  className="w-32 h-32 rounded-full object-cover"
+                  unoptimized
+                />
+              </div>
+            )}
 
-          {/* 닉네임 */}
-          <div>
-            <label className="text-sm text-gray-400 mb-2 block">닉네임</label>
-            <div className="text-xl font-semibold text-white">{user.nickname || "설정되지 않음"}</div>
-          </div>
-
-          {/* 이메일 */}
-          {user.email && (
+            {/* 닉네임 */}
             <div>
-              <label className="text-sm text-gray-400 mb-2 block">이메일</label>
-              <div className="text-white">{user.email}</div>
+              <label className="text-sm text-gray-400 mb-2 block">닉네임</label>
+              <div className="text-xl font-semibold text-white">
+                {user.nickname || "설정되지 않음"}
+              </div>
             </div>
-          )}
 
-          {/* 카카오 ID */}
-          <div>
-            <label className="text-sm text-gray-400 mb-2 block">카카오 ID</label>
-            <div className="text-white font-mono">{user.kakaoId}</div>
-          </div>
+            {/* 이메일 */}
+            {user.email && (
+              <div>
+                <label className="text-sm text-gray-400 mb-2 block">
+                  이메일
+                </label>
+                <div className="text-white">{user.email}</div>
+              </div>
+            )}
 
-          {/* 생성일 */}
-          <div>
-            <label className="text-sm text-gray-400 mb-2 block">가입일</label>
-            <div className="text-white">
-              {user.createdAt.toLocaleString("ko-KR")}
+            {/* 카카오 ID */}
+            <div>
+              <label className="text-sm text-gray-400 mb-2 block">
+                카카오 ID
+              </label>
+              <div className="text-white font-mono">{user.kakaoId}</div>
+            </div>
+
+            {/* UID */}
+            <div>
+              <UidSection userId={user.id} initialUid={user.uid} />
+            </div>
+
+            {/* 생성일 */}
+            <div>
+              <label className="text-sm text-gray-400 mb-2 block">가입일</label>
+              <div className="text-white">
+                {user.createdAt.toLocaleString("ko-KR")}
+              </div>
+            </div>
+
+            {/* 로그아웃 버튼 */}
+            <div className="pt-6 border-t border-gray-700">
+              <form action="/api/auth/logout" method="POST">
+                <button
+                  type="submit"
+                  className="w-full px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                >
+                  로그아웃
+                </button>
+              </form>
             </div>
           </div>
-
-          {/* 로그아웃 버튼 */}
-          <div className="pt-6 border-t border-gray-700">
-            <form action="/api/auth/logout" method="POST">
-              <button
-                type="submit"
-                className="w-full px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-              >
-                로그아웃
-              </button>
-            </form>
-          </div>
-        </div>
         </div>
       </div>
     </div>
   );
 }
-
