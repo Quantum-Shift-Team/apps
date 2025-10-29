@@ -17,6 +17,8 @@ model User {
   nickname      String?
   email         String?
   profileImage  String?
+  phoneNumber   String?
+  accountInfo   String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 

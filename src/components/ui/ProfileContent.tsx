@@ -10,6 +10,8 @@ interface ProfileContentProps {
     email: string | null;
     kakaoId: string;
     uid: string | null;
+    phoneNumber: string | null;
+    accountInfo: string | null;
     profileImage: string | null;
     createdAt: Date;
   };
@@ -48,6 +50,46 @@ export function ProfileContent({ user }: ProfileContentProps) {
     if (!response.ok) {
       const data = await response.json();
       throw new Error(data.error || "UID 업데이트에 실패했습니다.");
+    }
+
+    // 페이지 새로고침하여 최신 데이터 표시
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+  };
+
+  const handlePhoneNumberUpdate = async (newPhoneNumber: string) => {
+    const response = await fetch("/api/user/update-phone-number", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ phoneNumber: newPhoneNumber }),
+    });
+
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.error || "전화번호 업데이트에 실패했습니다.");
+    }
+
+    // 페이지 새로고침하여 최신 데이터 표시
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+  };
+
+  const handleAccountInfoUpdate = async (newAccountInfo: string) => {
+    const response = await fetch("/api/user/update-account-info", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ accountInfo: newAccountInfo }),
+    });
+
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.error || "계좌정보 업데이트에 실패했습니다.");
     }
 
     // 페이지 새로고침하여 최신 데이터 표시
@@ -128,6 +170,22 @@ export function ProfileContent({ user }: ProfileContentProps) {
           label="UID"
           value={user.uid || ""}
           onSave={handleUidUpdate}
+          placeholder="등록되지 않음"
+        />
+
+        {/* 전화번호 */}
+        <EditableListItem
+          label="전화번호"
+          value={user.phoneNumber || ""}
+          onSave={handlePhoneNumberUpdate}
+          placeholder="등록되지 않음"
+        />
+
+        {/* 계좌정보 */}
+        <EditableListItem
+          label="계좌정보"
+          value={user.accountInfo || ""}
+          onSave={handleAccountInfoUpdate}
           placeholder="등록되지 않음"
         />
 

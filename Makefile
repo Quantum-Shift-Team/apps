@@ -11,4 +11,4 @@ deploy:
 	git push origin main
 
 migrate:
-	npx prisma migrate dev --name init
+	npx prisma migrate dev --name $(or $(NAME),init)
