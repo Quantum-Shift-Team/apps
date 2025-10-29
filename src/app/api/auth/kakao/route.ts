@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { signToken, JWTPayload } from "@/lib/jwt";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -86,17 +87,27 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // 세션 생성
+    // JWT 토큰 생성
+    const payload: JWTPayload = {
+      userId: user.id,
+      kakaoId: user.kakaoId || undefined,
+      email: user.email || undefined,
+    };
+
+    const token = await signToken(payload, "7d");
+
+    // 세션 생성 및 JWT 토큰 쿠키에 저장
     const response = NextResponse.redirect(
       new URL("/", request.url)
     );
 
-    // DB의 user id를 쿠키에 저장
-    response.cookies.set("user_id", user.id, {
+    // JWT 토큰을 쿠키에 저장
+    response.cookies.set("auth-token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 60 * 60 * 24 * 7, // 7일
+      path: "/",
     });
 
     return response;

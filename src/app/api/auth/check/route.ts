@@ -1,10 +1,16 @@
-import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { getTokenFromCookie } from "@/lib/auth-middleware";
 
-export async function GET() {
-  const cookieStore = await cookies();
-  const userId = cookieStore.get("user_id")?.value;
+/**
+ * 인증 상태 확인 API
+ * GET /api/auth/check
+ */
+export async function GET(request: NextRequest) {
+  const user = await getTokenFromCookie(request, "auth-token");
 
-  return NextResponse.json({ isLoggedIn: !!userId });
+  return NextResponse.json({ 
+    isLoggedIn: !!user,
+    userId: user?.userId || null,
+  });
 }
 

@@ -1,18 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import { db } from "@/lib/db";
+import { getTokenFromCookie } from "@/lib/auth-middleware";
 
 export async function POST(request: NextRequest) {
   try {
-    const cookieStore = await cookies();
-    const userId = cookieStore.get("user_id")?.value;
+    // JWT 토큰에서 사용자 정보 추출
+    const userPayload = await getTokenFromCookie(request, "auth-token");
 
-    if (!userId) {
+    if (!userPayload || !userPayload.userId) {
       return NextResponse.json(
         { error: "로그인이 필요합니다." },
         { status: 401 }
       );
     }
+
+    const userId = userPayload.userId;
 
     const body = await request.json();
     const { nickname } = body;

@@ -2,12 +2,17 @@ import { cookies } from "next/headers";
 import { BackHeader } from "@/components/layout/BackHeader";
 import { db } from "@/lib/db";
 import { ProfileContent } from "@/components/ui/ProfileContent";
+import { verifyTokenFromCookieValue } from "@/lib/auth-middleware";
 
 export default async function MyPage() {
+  // 쿠키에서 JWT 토큰 가져오기
   const cookieStore = await cookies();
-  const userId = cookieStore.get("user_id")?.value;
+  const authToken = cookieStore.get("auth-token")?.value;
 
-  if (!userId) {
+  // JWT 토큰 검증
+  const userPayload = await verifyTokenFromCookieValue(authToken);
+
+  if (!userPayload || !userPayload.userId) {
     // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -26,7 +31,7 @@ export default async function MyPage() {
 
   // DB에서 유저 정보 가져오기
   const user = await db.user.findUnique({
-    where: { id: userId },
+    where: { id: userPayload.userId },
   });
 
   if (!user) {
