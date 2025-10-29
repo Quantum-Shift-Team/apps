@@ -8,7 +8,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ```bash
 # 데이터베이스
-DATABASE_URL=postgresql://quantumshift:quantumshift123@localhost:5432/quantumshift
+DATABASE_URL=postgresql://postgres:postgres@localhost:5431/postgres
 
 # 카카오 로그인
 KAKAO_REST_API_KEY=your_rest_api_key
