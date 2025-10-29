@@ -2,9 +2,12 @@
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
     "kakaoId" TEXT NOT NULL,
+    "uid" TEXT,
     "nickname" TEXT,
     "email" TEXT,
     "profileImage" TEXT,
+    "phoneNumber" TEXT,
+    "accountInfo" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -13,3 +16,4 @@ CREATE TABLE "users" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_kakaoId_key" ON "users"("kakaoId");
+

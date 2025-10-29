@@ -122,49 +122,6 @@ export function ProfileContent({ user }: ProfileContentProps) {
           onSave={handleNicknameUpdate}
           placeholder="설정되지 않음"
         />
-
-        {/* 이메일 */}
-        <div className="flex items-center justify-between px-6 py-4 hover:bg-gray-800 cursor-pointer transition-colors">
-          <span className="text-gray-400">이메일</span>
-          <div className="flex items-center space-x-2">
-            <span className="text-white">{user.email || "없음"}</span>
-            <svg
-              className="w-4 h-4 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </div>
-        </div>
-
-        {/* 카카오 ID */}
-        <div className="flex items-center justify-between px-6 py-4 hover:bg-gray-800 cursor-pointer transition-colors">
-          <span className="text-gray-400">카카오 ID</span>
-          <div className="flex items-center space-x-2">
-            <span className="text-white font-mono">{user.kakaoId}</span>
-            <svg
-              className="w-4 h-4 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </div>
-        </div>
-
         {/* UID */}
         <EditableListItem
           label="UID"
@@ -191,9 +148,9 @@ export function ProfileContent({ user }: ProfileContentProps) {
 
         {/* 가입일 */}
         <div className="flex items-center justify-between px-6 py-4 hover:bg-gray-800 cursor-pointer transition-colors">
-          <span className="text-gray-400">가입일</span>
+          <span className="text-gray-400 text-sm">가입일</span>
           <div className="flex items-center space-x-2">
-            <span className="text-white">
+            <span className="text-white text-sm">
               {user.createdAt.toLocaleDateString("ko-KR")}
             </span>
             <svg

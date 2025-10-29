@@ -118,17 +118,17 @@ export function EditableListItem({
       }`}
       onClick={pendingValue ? undefined : handleClick}
     >
-      <span className="text-gray-400">{label}</span>
+      <span className="text-gray-400 text-sm">{label}</span>
       <div className="flex items-center space-x-2">
         {pendingValue ? (
           <span
-            className="text-white opacity-60 select-none"
+            className="text-white opacity-60 select-none text-sm"
             style={{ filter: "blur(1px)" }}
           >
             {pendingValue}
           </span>
         ) : (
-          <span className="text-white">{value || placeholder}</span>
+          <span className="text-white text-sm">{value || placeholder}</span>
         )}
         <svg
           className="w-4 h-4 text-gray-400"
