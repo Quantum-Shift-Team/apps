@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface EditableListItemProps {
   label: string;
@@ -20,7 +20,18 @@ export function EditableListItem({
   const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState(value);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [pendingValue, setPendingValue] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // value prop이 변경되면 (페이지 새로고침 후) 로딩 상태 해제
+  // pendingValue와 value가 같으면 서버 반영 완료된 것으로 간주
+  useEffect(() => {
+    if (pendingValue && value === pendingValue && !isEditing) {
+      // 서버에 반영된 것으로 확인되면 상태 해제
+      setPendingValue(null);
+      setIsSubmitting(false);
+    }
+  }, [value, pendingValue, isEditing]);
 
   const handleClick = () => {
     setIsEditing(true);
@@ -36,13 +47,15 @@ export function EditableListItem({
 
     setIsSubmitting(true);
     setError(null);
+    setPendingValue(inputValue);
 
     try {
       await onSave(inputValue);
       setIsEditing(false);
+      // 페이지 새로고침 전까지 로딩 상태 유지
     } catch (err) {
       setError(err instanceof Error ? err.message : "저장에 실패했습니다.");
-    } finally {
+      setPendingValue(null);
       setIsSubmitting(false);
     }
   };
@@ -51,6 +64,7 @@ export function EditableListItem({
     setInputValue(value);
     setIsEditing(false);
     setError(null);
+    setPendingValue(null);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -99,12 +113,23 @@ export function EditableListItem({
 
   return (
     <div
-      className="flex items-center justify-between px-6 py-4 hover:bg-gray-800 cursor-pointer transition-colors"
-      onClick={handleClick}
+      className={`flex items-center justify-between px-6 py-4 transition-colors ${
+        pendingValue ? "cursor-wait" : "cursor-pointer hover:bg-gray-800"
+      }`}
+      onClick={pendingValue ? undefined : handleClick}
     >
       <span className="text-gray-400">{label}</span>
       <div className="flex items-center space-x-2">
-        <span className="text-white">{value || placeholder}</span>
+        {pendingValue ? (
+          <span
+            className="text-white opacity-60 select-none"
+            style={{ filter: "blur(1px)" }}
+          >
+            {pendingValue}
+          </span>
+        ) : (
+          <span className="text-white">{value || placeholder}</span>
+        )}
         <svg
           className="w-4 h-4 text-gray-400"
           fill="none"
