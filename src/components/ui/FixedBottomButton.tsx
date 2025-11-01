@@ -15,7 +15,7 @@ export function FixedBottomButton({
   children, 
   className = "w-[90%] py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors font-medium",
   disabled = false,
-  bgOpacity = 100
+  bgOpacity = 30
 }: FixedBottomButtonProps) {
   const buttonClassName = `block ${className} mx-auto ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`;
   const isExternalUrl = href?.startsWith('http');
