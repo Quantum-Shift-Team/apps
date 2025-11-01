@@ -120,11 +120,12 @@ export function LightweightChartsWidget({
     const processCandleData = () => {
       if (!candleResponse || isLoading) return;
 
-      const upbitData = candleResponse.data;
+      const upbitData = candleResponse.candleData.data;
+      const analyzeData = candleResponse.analyzeData;
 
       // 타임스탬프 부모에게 전달
-      if (onTimestampUpdate && candleResponse.timestamp) {
-        onTimestampUpdate(candleResponse.timestamp);
+      if (onTimestampUpdate && candleResponse.candleData.timestamp) {
+        onTimestampUpdate(candleResponse.candleData.timestamp);
       }
 
       try {
@@ -170,28 +171,38 @@ export function LightweightChartsWidget({
 
         candlestickSeries.setData(uniqueData);
 
-        // 현재 가격 가져오기 (가장 최근 종가)
+        // 현재 가격 가져오기 (가장 최근 종가 또는 AI 분석 데이터 사용)
         if (uniqueData.length > 0) {
-          const latestPrice = uniqueData[uniqueData.length - 1].close;
+          // AI 분석 데이터가 있으면 그것을 사용, 없으면 캔들 데이터 사용
+          const latestPrice = analyzeData?.current_price || uniqueData[uniqueData.length - 1].close;
 
           // 부모 컴포넌트에 현재 가격 전달
           if (onPriceUpdate) {
             onPriceUpdate(latestPrice);
           }
 
-          // 가격 계산 (코인별 설정 사용)
+          // 가격 계산
           const coin = getCoinFromSymbol(symbol);
-          const priceConfig = CRYPTO_CURRENCIES[coin]?.priceConfig || {
-            entryPercent: 0.998,
-            stopLossPercent: 0.995,
-            takeProfitPercent: 1.008,
-          };
-
-          const prices = {
-            entry: latestPrice * priceConfig.entryPercent,
-            stopLoss: latestPrice * priceConfig.stopLossPercent,
-            takeProfit: latestPrice * priceConfig.takeProfitPercent,
-          };
+          
+          // AI 분석 데이터가 있으면 그것을 사용, 없으면 기본 비율 사용
+          const prices = analyzeData
+            ? {
+                entry: analyzeData.current_price,
+                stopLoss: analyzeData.lowest_price,
+                takeProfit: analyzeData.highest_price,
+              }
+            : (() => {
+                const priceConfig = CRYPTO_CURRENCIES[coin]?.priceConfig || {
+                  entryPercent: 0.998,
+                  stopLossPercent: 0.995,
+                  takeProfitPercent: 1.008,
+                };
+                return {
+                  entry: latestPrice * priceConfig.entryPercent,
+                  stopLoss: latestPrice * priceConfig.stopLossPercent,
+                  takeProfit: latestPrice * priceConfig.takeProfitPercent,
+                };
+              })();
 
           // 가격 포맷팅 함수
           const formatPriceLine = (price: number) => {

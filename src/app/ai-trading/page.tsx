@@ -11,6 +11,7 @@ import {
   DEFAULT_CRYPTO,
   getCryptoInfo,
 } from "@/lib/cryptoConfig";
+import { useCandleData } from "@/hooks/useCandleData";
 
 interface CryptoPriceData {
   trade_price: number;
@@ -28,20 +29,62 @@ export default function AITradingPage() {
   const wsRef = useRef<WebSocket | null>(null);
   const queryClient = useQueryClient();
 
+  // 코인 정보를 가져옴
+  const cryptoInfo = getCryptoInfo(selectedCrypto);
+  
+  // 현재 선택된 코인의 캔들 데이터와 분석 데이터
+  const { data: combinedData } = useCandleData(
+    cryptoInfo.code,
+    selectedInterval,
+    true
+  );
+
   const handleIntervalChange = (interval: string) => {
     setSelectedInterval(interval);
 
     // 선택한 시간대의 모든 코인 데이터 프리패치
-    const fetchCandleData = async (market: string, interval: string) => {
-      const apiUrl = `/api/candles?interval=${interval}&market=${market}&count=200`;
-      return fetch(apiUrl).then((res) => res.json());
+    const fetchCombinedData = async (market: string, interval: string) => {
+      // 캔들 데이터 가져오기
+      const candleApiUrl = `/api/candles?interval=${interval}&market=${market}&count=200`;
+      const candleResponse = await fetch(candleApiUrl).then((res) => res.json());
+
+      // 분석 데이터 가져오기
+      let analyzeResult = null;
+      try {
+        const analyzeApiUrl = `/api/trading/analyze`;
+        const analyzeResponse = await fetch(analyzeApiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            market,
+            interval: parseInt(interval) || 15,
+            hours: 12,
+          }),
+        });
+
+        if (analyzeResponse.ok) {
+          const analyzeData = await analyzeResponse.json();
+          if (analyzeData && Object.keys(analyzeData).length > 0) {
+            analyzeResult = analyzeData;
+          }
+        }
+      } catch (error) {
+        console.warn('Failed to fetch analyze data:', error);
+      }
+
+      return {
+        candleData: candleResponse,
+        analyzeData: analyzeResult,
+      };
     };
 
     // 모든 코인에 대해 선택된 시간대 데이터 prefetch
     Object.values(CRYPTO_CURRENCIES).forEach((crypto) => {
       queryClient.prefetchQuery({
         queryKey: ["candles", crypto.code, interval],
-        queryFn: () => fetchCandleData(crypto.code, interval),
+        queryFn: () => fetchCombinedData(crypto.code, interval),
         staleTime: 30 * 1000,
       });
     });
@@ -65,9 +108,41 @@ export default function AITradingPage() {
 
   // 페이지 진입 시 데이터 프리패치
   useEffect(() => {
-    const fetchCandleData = async (market: string, interval: string) => {
-      const apiUrl = `/api/candles?interval=${interval}&market=${market}&count=200`;
-      return fetch(apiUrl).then((res) => res.json());
+    const fetchCombinedData = async (market: string, interval: string) => {
+      // 캔들 데이터 가져오기
+      const candleApiUrl = `/api/candles?interval=${interval}&market=${market}&count=200`;
+      const candleResponse = await fetch(candleApiUrl).then((res) => res.json());
+
+      // 분석 데이터 가져오기
+      let analyzeResult = null;
+      try {
+        const analyzeApiUrl = `/api/trading/analyze`;
+        const analyzeResponse = await fetch(analyzeApiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            market,
+            interval: parseInt(interval) || 15,
+            hours: 12,
+          }),
+        });
+
+        if (analyzeResponse.ok) {
+          const analyzeData = await analyzeResponse.json();
+          if (analyzeData && Object.keys(analyzeData).length > 0) {
+            analyzeResult = analyzeData;
+          }
+        }
+      } catch (error) {
+        console.warn('Failed to fetch analyze data:', error);
+      }
+
+      return {
+        candleData: candleResponse,
+        analyzeData: analyzeResult,
+      };
     };
 
     const prefetchData = async () => {
@@ -78,7 +153,7 @@ export default function AITradingPage() {
       for (const interval of intervals) {
         queryClient.prefetchQuery({
           queryKey: ["candles", "KRW-BTC", interval],
-          queryFn: () => fetchCandleData("KRW-BTC", interval),
+          queryFn: () => fetchCombinedData("KRW-BTC", interval),
           staleTime: 30 * 1000,
         });
       }
@@ -90,7 +165,7 @@ export default function AITradingPage() {
         if (crypto) {
           queryClient.prefetchQuery({
             queryKey: ["candles", crypto.code, "15"],
-            queryFn: () => fetchCandleData(crypto.code, "15"),
+            queryFn: () => fetchCombinedData(crypto.code, "15"),
             staleTime: 30 * 1000,
           });
         }
@@ -158,12 +233,12 @@ export default function AITradingPage() {
     };
   }, []); // 한 번만 실행
 
-  // 코인 정보를 가져옴
-  const cryptoInfo = getCryptoInfo(selectedCrypto);
-
   // 현재 선택된 코인의 가격 정보
   const currentPriceData = cryptoPrices[cryptoInfo.code];
   const currentPriceUSDData = cryptoPrices[cryptoInfo.usdtCode];
+  
+  // 분석 데이터 추출
+  const analyzeData = combinedData?.analyzeData;
 
   return (
     <div className="px-0 py-6 space-y-4">
@@ -262,24 +337,158 @@ export default function AITradingPage() {
         defaultInterval={selectedInterval}
       />
 
-      {/* AI 트레이딩 특징 */}
-      {/* <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-white">AI 트레이딩 특징</h3>
-          <div className="space-y-3">
-            <div className="flex items-center gap-3 p-3 bg-gray-800 rounded-lg">
-              <span className="font-tossface text-2xl">⚡</span>
-              <span className="text-white">실시간 시장 분석</span>
-            </div>
-            <div className="flex items-center gap-3 p-3 bg-gray-800 rounded-lg">
-              <span className="font-tossface text-2xl">🎯</span>
-              <span className="text-white">정확한 매매 타이밍</span>
-            </div>
-            <div className="flex items-center gap-3 p-3 bg-gray-800 rounded-lg">
-              <span className="font-tossface text-2xl">🛡️</span>
-              <span className="text-white">리스크 관리</span>
-            </div>
+      {/* AI 분석 결과 */}
+      {analyzeData && (
+        <div className="px-6 space-y-4">
+          <div className="border-b border-gray-700 pb-2">
+            <h3 className="text-lg font-semibold text-white">AI 분석 결과</h3>
           </div>
-        </div> */}
+
+          {/* 매매 신호 */}
+          {analyzeData.trading_signals && (
+            <div className="bg-gray-800 rounded-lg p-4 space-y-2">
+              <h4 className="text-sm font-semibold text-gray-300 mb-3">매매 신호</h4>
+              <div className="grid grid-cols-1 gap-2">
+                {Object.entries(analyzeData.trading_signals).map(([key, value]) => (
+                  <div key={key} className="flex items-center justify-between">
+                    <span className="text-sm text-gray-400 capitalize">{key}:</span>
+                    <span className="text-sm font-medium text-white">{value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 기술적 지표 요약 */}
+          {analyzeData.technical_indicators && (
+            <div className="bg-gray-800 rounded-lg p-4 space-y-2">
+              <h4 className="text-sm font-semibold text-gray-300 mb-3">주요 지표</h4>
+              <div className="grid grid-cols-2 gap-2">
+                {analyzeData.technical_indicators.rsi && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-gray-400">RSI:</span>
+                    <span className="text-xs font-medium text-white">
+                      {analyzeData.technical_indicators.rsi.toFixed(2)}
+                    </span>
+                  </div>
+                )}
+                {analyzeData.technical_indicators.macd && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-gray-400">MACD:</span>
+                    <span className="text-xs font-medium text-white">
+                      {analyzeData.technical_indicators.macd.toFixed(2)}
+                    </span>
+                  </div>
+                )}
+                {analyzeData.technical_indicators.adx && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-gray-400">ADX:</span>
+                    <span className="text-xs font-medium text-white">
+                      {analyzeData.technical_indicators.adx.toFixed(2)}
+                    </span>
+                  </div>
+                )}
+                {analyzeData.technical_indicators.atr && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-gray-400">ATR:</span>
+                    <span className="text-xs font-medium text-white">
+                      {Math.round(analyzeData.technical_indicators.atr).toLocaleString()}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* 상세 분석 리포트 */}
+          {analyzeData.analysis_report && (
+            <div className="bg-gray-800 rounded-lg p-4">
+              <h4 className="text-sm font-semibold text-blue-400 mb-3">상세 분석</h4>
+              <div className="text-gray-300 text-sm max-h-96 overflow-y-auto leading-relaxed">
+                {analyzeData.analysis_report.split('\n').map((line, idx) => {
+                  const trimmedLine = line.trim();
+                  
+                  // 빈 줄
+                  if (!trimmedLine) {
+                    return <div key={idx} className="h-2" />;
+                  }
+                  
+                  // H1 제목
+                  if (trimmedLine.startsWith('# ') && !trimmedLine.startsWith('##')) {
+                    const text = trimmedLine.replace('# ', '');
+                    return (
+                      <h1 key={idx} className="text-2xl font-bold text-blue-300 mb-3 mt-4 first:mt-0">
+                        {text}
+                      </h1>
+                    );
+                  }
+                  
+                  // H2 제목
+                  if (trimmedLine.startsWith('## ') && !trimmedLine.startsWith('###')) {
+                    const text = trimmedLine.replace('## ', '');
+                    return (
+                      <h2 key={idx} className="text-xl font-bold text-cyan-400 mb-2 mt-3">
+                        {text}
+                      </h2>
+                    );
+                  }
+                  
+                  // H3 제목
+                  if (trimmedLine.startsWith('### ')) {
+                    const text = trimmedLine.replace('### ', '');
+                    return (
+                      <h3 key={idx} className="text-base font-semibold text-green-400 mb-2 mt-2">
+                        {text}
+                      </h3>
+                    );
+                  }
+                  
+                  // 구분선
+                  if (trimmedLine === '---') {
+                    return <hr key={idx} className="my-3 border-gray-600" />;
+                  }
+                  
+                  // 리스트 항목
+                  if (trimmedLine.startsWith('- ')) {
+                    const text = trimmedLine.replace('- ', '');
+                    return (
+                      <div key={idx} className="flex items-start mb-1 pl-2">
+                        <span className="text-blue-400 mr-2">•</span>
+                        <span className="text-gray-200 flex-1">
+                          {text.split('**').map((part, partIdx) => 
+                            partIdx % 2 === 1 ? (
+                              <strong key={partIdx} className="text-white font-semibold">
+                                {part}
+                              </strong>
+                            ) : (
+                              <span key={partIdx}>{part}</span>
+                            )
+                          )}
+                        </span>
+                      </div>
+                    );
+                  }
+                  
+                  // 일반 문단
+                  return (
+                    <p key={idx} className="text-gray-200 mb-2">
+                      {line.split('**').map((part, partIdx) => 
+                        partIdx % 2 === 1 ? (
+                          <strong key={partIdx} className="text-blue-300 font-semibold">
+                            {part}
+                          </strong>
+                        ) : (
+                          <span key={partIdx}>{part}</span>
+                        )
+                      )}
+                    </p>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
