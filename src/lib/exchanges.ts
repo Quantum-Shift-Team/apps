@@ -10,7 +10,8 @@ export const EXCHANGES = [
     takerFee: 0.033,
     logoBg: 'bg-blue-100',
     cardBg: 'bg-blue-50',
-    description: '수수료 40% 페이백'
+    description: '수수료 40% 페이백',
+    referralUrl: `#`,
   },
   {
     id: 'bitget',
@@ -22,7 +23,8 @@ export const EXCHANGES = [
     takerFee: 0.02,
     logoBg: 'bg-yellow-100',
     cardBg: 'bg-yellow-50',
-    description: '수수료 50% 페이백'
+    description: '수수료 50% 페이백',
+    referralUrl: `#`,
   },
   {
     id: 'okx',
@@ -34,7 +36,8 @@ export const EXCHANGES = [
     takerFee: 0.025,
     logoBg: 'bg-gray-100',
     cardBg: 'bg-gray-50',
-    description: '수수료 50% 페이백'
+    description: '수수료 50% 페이백',
+    referralUrl: `#`,
   },
   {
     id: 'bingx',
@@ -46,7 +49,8 @@ export const EXCHANGES = [
     takerFee: 0.02,
     logoBg: 'bg-red-100',
     cardBg: 'bg-red-50',
-    description: '수수료 60% 페이백'
+    description: '수수료 60% 페이백',
+    referralUrl: `#`,
   },
   {
     id: 'gateio',
@@ -58,7 +62,8 @@ export const EXCHANGES = [
     takerFee: 0.01,
     logoBg: 'bg-purple-100',
     cardBg: 'bg-purple-50',
-    description: '수수료 75% 페이백'
+    description: '수수료 75% 페이백',
+    referralUrl: `#`,
   },
   {
     id: 'binance',
@@ -70,7 +75,8 @@ export const EXCHANGES = [
     takerFee: 0.03,
     logoBg: 'bg-amber-100',
     cardBg: 'bg-amber-50',
-    description: '수수료 40% 페이백'
+    description: '수수료 40% 페이백',
+    referralUrl: 'https://accounts.binance.com/en/register?ref=489449343',
   }
 ] as const
 

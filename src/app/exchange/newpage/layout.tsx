@@ -1,7 +1,6 @@
 "use client";
 
 import { BackHeader } from "@/components/layout/BackHeader";
-import { LAYOUT_CONSTANTS } from "@/lib/constants";
 import { usePathname } from "next/navigation";
 
 export default function NewPageLayout({
@@ -13,14 +12,9 @@ export default function NewPageLayout({
   const exchangeName = pathname.split('/').pop();
   
   return (
-    <div className="min-h-screen bg-gray-900">
+    <>
       <BackHeader backLink={`/exchange/${exchangeName}`} />
-      <main 
-        className="pb-24"
-        style={{ paddingTop: `${LAYOUT_CONSTANTS.BACK_HEADER_HEIGHT * 0.25}rem` }}
-      >
-        {children}
-      </main>
-    </div>
+      {children}
+    </>
   );
 }
