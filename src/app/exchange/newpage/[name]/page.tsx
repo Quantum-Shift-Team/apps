@@ -78,7 +78,7 @@ export default function ExchangeNewPage({ params }: ExchangeNewPageProps) {
       </div>
 
       {/* 다음 버튼 */}
-      <FixedBottomButton>
+      <FixedBottomButton href={exchange.referralUrl}>
         3분 만에 가입하기
       </FixedBottomButton>
     </div>

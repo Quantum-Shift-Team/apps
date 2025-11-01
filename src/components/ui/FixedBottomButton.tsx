@@ -16,18 +16,32 @@ export function FixedBottomButton({
   disabled = false
 }: FixedBottomButtonProps) {
   const buttonClassName = `block ${className} mx-auto ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`;
+  const isExternalUrl = href?.startsWith('http');
   
   return (
     <div className="fixed bottom-0 left-0 right-0 p-4 z-50">
       <div className="max-w-4xl mx-auto">
         <div className="text-center">
           {href ? (
-            <Link 
-              href={href}
-              className={buttonClassName}
-            >
-              {children}
-            </Link>
+            isExternalUrl ? (
+              <a
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={buttonClassName}
+                onClick={onClick}
+              >
+                {children}
+              </a>
+            ) : (
+              <Link 
+                href={href}
+                className={buttonClassName}
+                onClick={onClick}
+              >
+                {children}
+              </Link>
+            )
           ) : (
             <button
               onClick={onClick}
