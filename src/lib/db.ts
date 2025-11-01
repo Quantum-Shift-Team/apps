@@ -11,7 +11,8 @@ export const db =
     log: process.env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
   });
 
-if (process.env.NODE_ENV !== "production") {
+// 모든 환경에서 전역 변수에 저장하여 중복 생성 방지 (Turbopack 호환성)
+if (!globalForPrisma.prisma) {
   globalForPrisma.prisma = db;
 }
 
