@@ -528,6 +528,7 @@ export function PaybackCalculator({ onClose }: { onClose: () => void }) {
 
       {currentStep === 5 && (
         <FixedBottomButton
+          bgOpacity={90}
           onClick={() => {
             setCurrentStep(1);
             setSelectedExchange(null);

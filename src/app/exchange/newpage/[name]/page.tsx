@@ -1,7 +1,7 @@
 "use client";
 
 import { EXCHANGES } from "@/lib/exchanges";
-import { notFound } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { use } from "react";
 import Image from "next/image";
 import { FixedBottomButton } from "@/components/ui/FixedBottomButton";
@@ -14,6 +14,7 @@ interface ExchangeNewPageProps {
 
 export default function ExchangeNewPage({ params }: ExchangeNewPageProps) {
   const { name } = use(params);
+  const router = useRouter();
   const exchange = EXCHANGES.find(
     (ex) => ex.id.toLowerCase() === name.toLowerCase()
   );
@@ -21,6 +22,15 @@ export default function ExchangeNewPage({ params }: ExchangeNewPageProps) {
   if (!exchange) {
     notFound();
   }
+
+  const handleSignupClick = () => {
+    // 새 창에서 거래소 가입 페이지 열기
+    if (exchange.referralUrl && exchange.referralUrl.startsWith('http')) {
+      window.open(exchange.referralUrl, '_blank');
+    }
+    // 내 페이지는 signup 페이지로 이동
+    router.push(`/exchange/signup/${exchange.id}`);
+  };
 
   return (
     <div className="flex flex-col px-6 py-6">
@@ -78,7 +88,7 @@ export default function ExchangeNewPage({ params }: ExchangeNewPageProps) {
       </div>
 
       {/* 다음 버튼 */}
-      <FixedBottomButton href={exchange.referralUrl}>
+      <FixedBottomButton onClick={handleSignupClick}>
         3분 만에 가입하기
       </FixedBottomButton>
     </div>
