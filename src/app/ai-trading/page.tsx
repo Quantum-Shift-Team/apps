@@ -61,20 +61,12 @@ export default function AITradingPage() {
   // 페이지 진입 시 분석 데이터만 한번 가져오기
   useEffect(() => {
     const fetchAllAnalyzeData = async () => {
-      const now = new Date();
-      
-      // 00분~05분 사이면 이전 시각으로 요청
-      if (now.getMinutes() >= 0 && now.getMinutes() < 5) {
-        now.setHours(now.getHours() - 1);
-      }
-      
-      now.setMinutes(0);
-      now.setSeconds(0);
-      now.setMilliseconds(0);
-      const toTime = now.toISOString();
-      
       // 모든 코인 코드 가져오기
       const allMarkets = Object.values(CRYPTO_CURRENCIES).map((crypto) => crypto.code);
+      
+      // 00분~05분 사이면 refresh: true
+      const now = new Date();
+      const refresh = now.getMinutes() >= 0 && now.getMinutes() < 5;
       
       try {
         const analyzeApiUrl = `/api/trading/analyze`;
@@ -87,7 +79,7 @@ export default function AITradingPage() {
             markets: allMarkets,
             interval: 15,
             hours: 12,
-            to: toTime,
+            refresh,
           }),
         });
 
