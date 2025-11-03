@@ -10,7 +10,7 @@ import {
 } from "lightweight-charts";
 import { PRICE_LINE_CONFIG } from "@/lib/tradingConfig";
 import { CRYPTO_CURRENCIES } from "@/lib/cryptoConfig";
-import { useCandleData } from "@/hooks/useCandleData";
+import { useCandleData, AnalyzeResponse } from "@/hooks/useCandleData";
 
 interface LightweightChartsWidgetProps {
   symbol?: string;
@@ -20,6 +20,7 @@ interface LightweightChartsWidgetProps {
   locale?: "ko" | "en";
   onPriceUpdate?: (price: number) => void; // 현재 가격 업데이트 콜백
   onTimestampUpdate?: (timestamp: number) => void; // 데이터 타임스탬프 업데이트
+  analyzeData?: AnalyzeResponse | null; // 분석 데이터
 }
 
 export function LightweightChartsWidget({
@@ -29,6 +30,7 @@ export function LightweightChartsWidget({
   interval = "1D",
   onPriceUpdate,
   onTimestampUpdate,
+  analyzeData: analyzeDataProp,
 }: LightweightChartsWidgetProps) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
@@ -121,7 +123,8 @@ export function LightweightChartsWidget({
       if (!candleResponse || isLoading) return;
 
       const upbitData = candleResponse.candleData.data;
-      const analyzeData = candleResponse.analyzeData;
+      // prop으로 전달된 analyzeData를 우선 사용
+      const analyzeData = analyzeDataProp || candleResponse.analyzeData;
 
       // 타임스탬프 부모에게 전달
       if (onTimestampUpdate && candleResponse.candleData.timestamp) {
@@ -280,6 +283,7 @@ export function LightweightChartsWidget({
     candleResponse,
     isLoading,
     market,
+    analyzeDataProp,
   ]);
 
   // 로딩 placeholder 컴포넌트

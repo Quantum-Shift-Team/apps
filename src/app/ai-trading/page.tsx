@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import {
   TimeIntervalSelector,
   LightweightChartsWidget,
@@ -11,7 +10,7 @@ import {
   DEFAULT_CRYPTO,
   getCryptoInfo,
 } from "@/lib/cryptoConfig";
-import { useCandleData } from "@/hooks/useCandleData";
+import { useCandleData, AnalyzeResponse } from "@/hooks/useCandleData";
 
 interface CryptoPriceData {
   trade_price: number;
@@ -25,77 +24,30 @@ export default function AITradingPage() {
   const [cryptoPrices, setCryptoPrices] = useState<
     Record<string, CryptoPriceData>
   >({});
-  const [dataTimestamp, setDataTimestamp] = useState<number | null>(null);
+  const [analyzeDataByMarket, setAnalyzeDataByMarket] = useState<
+    Record<string, AnalyzeResponse>
+  >({});
   const wsRef = useRef<WebSocket | null>(null);
-  const queryClient = useQueryClient();
 
   // 코인 정보를 가져옴
   const cryptoInfo = getCryptoInfo(selectedCrypto);
   
-  // 현재 선택된 코인의 캔들 데이터와 분석 데이터
+  // 현재 선택된 코인의 캔들 데이터
   const { data: combinedData } = useCandleData(
     cryptoInfo.code,
     selectedInterval,
     true
   );
+  
+  // 현재 선택된 코인의 분석 데이터
+  const analyzeData = analyzeDataByMarket[cryptoInfo.code] || null;
 
   const handleIntervalChange = (interval: string) => {
     setSelectedInterval(interval);
-
-    // 선택한 시간대의 모든 코인 데이터 프리패치
-    const fetchCombinedData = async (market: string, interval: string) => {
-      // 캔들 데이터 가져오기
-      const candleApiUrl = `/api/candles?interval=${interval}&market=${market}&count=200`;
-      const candleResponse = await fetch(candleApiUrl).then((res) => res.json());
-
-      // 분석 데이터 가져오기
-      let analyzeResult = null;
-      try {
-        const analyzeApiUrl = `/api/trading/analyze`;
-        const analyzeResponse = await fetch(analyzeApiUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            market,
-            interval: parseInt(interval) || 15,
-            hours: 12,
-          }),
-        });
-
-        if (analyzeResponse.ok) {
-          const analyzeData = await analyzeResponse.json();
-          if (analyzeData && Object.keys(analyzeData).length > 0) {
-            analyzeResult = analyzeData;
-          }
-        }
-      } catch (error) {
-        console.warn('Failed to fetch analyze data:', error);
-      }
-
-      return {
-        candleData: candleResponse,
-        analyzeData: analyzeResult,
-      };
-    };
-
-    // 모든 코인에 대해 선택된 시간대 데이터 prefetch
-    Object.values(CRYPTO_CURRENCIES).forEach((crypto) => {
-      queryClient.prefetchQuery({
-        queryKey: ["candles", crypto.code, interval],
-        queryFn: () => fetchCombinedData(crypto.code, interval),
-        staleTime: 30 * 1000,
-      });
-    });
   };
 
   const handlePriceUpdate = useCallback(() => {
     // 차트에서 업데이트된 가격을 받을 때 사용
-  }, []);
-
-  const handleTimestampUpdate = useCallback((timestamp: number) => {
-    setDataTimestamp(timestamp);
   }, []);
 
   // 모든 코인 가격을 관리하는 상태를 업데이트
@@ -106,15 +58,24 @@ export default function AITradingPage() {
     }));
   };
 
-  // 페이지 진입 시 데이터 프리패치
+  // 페이지 진입 시 분석 데이터만 한번 가져오기
   useEffect(() => {
-    const fetchCombinedData = async (market: string, interval: string) => {
-      // 캔들 데이터 가져오기
-      const candleApiUrl = `/api/candles?interval=${interval}&market=${market}&count=200`;
-      const candleResponse = await fetch(candleApiUrl).then((res) => res.json());
-
-      // 분석 데이터 가져오기
-      let analyzeResult = null;
+    const fetchAllAnalyzeData = async () => {
+      const now = new Date();
+      
+      // 00분~05분 사이면 이전 시각으로 요청
+      if (now.getMinutes() >= 0 && now.getMinutes() < 5) {
+        now.setHours(now.getHours() - 1);
+      }
+      
+      now.setMinutes(0);
+      now.setSeconds(0);
+      now.setMilliseconds(0);
+      const toTime = now.toISOString();
+      
+      // 모든 코인 코드 가져오기
+      const allMarkets = Object.values(CRYPTO_CURRENCIES).map((crypto) => crypto.code);
+      
       try {
         const analyzeApiUrl = `/api/trading/analyze`;
         const analyzeResponse = await fetch(analyzeApiUrl, {
@@ -123,57 +84,60 @@ export default function AITradingPage() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            market,
-            interval: parseInt(interval) || 15,
+            markets: allMarkets,
+            interval: 15,
             hours: 12,
+            to: toTime,
           }),
         });
 
         if (analyzeResponse.ok) {
-          const analyzeData = await analyzeResponse.json();
-          if (analyzeData && Object.keys(analyzeData).length > 0) {
-            analyzeResult = analyzeData;
+          const responseData = await analyzeResponse.json();
+          
+          // 응답이 객체인 경우 각 코인별로 저장
+          if (responseData && typeof responseData === 'object') {
+            // results 배열이 있는 경우
+            if ('results' in responseData && Array.isArray(responseData.results)) {
+              responseData.results.forEach((analyzeData: AnalyzeResponse) => {
+                if (analyzeData && analyzeData.market && Object.keys(analyzeData).length > 0) {
+                  setAnalyzeDataByMarket((prev) => ({
+                    ...prev,
+                    [analyzeData.market]: analyzeData,
+                  }));
+                }
+              });
+            } 
+            // 배열인 경우
+            else if (Array.isArray(responseData)) {
+              responseData.forEach((analyzeData: AnalyzeResponse) => {
+                if (analyzeData && analyzeData.market && Object.keys(analyzeData).length > 0) {
+                  setAnalyzeDataByMarket((prev) => ({
+                    ...prev,
+                    [analyzeData.market]: analyzeData,
+                  }));
+                }
+              });
+            } 
+            // 객체인 경우 (코인별로 키가 있는 경우)
+            else {
+              Object.entries(responseData).forEach(([market, analyzeData]) => {
+                if (analyzeData && typeof analyzeData === 'object' && Object.keys(analyzeData).length > 0) {
+                  setAnalyzeDataByMarket((prev) => ({
+                    ...prev,
+                    [market]: analyzeData as AnalyzeResponse,
+                  }));
+                }
+              });
+            }
           }
         }
       } catch (error) {
         console.warn('Failed to fetch analyze data:', error);
       }
-
-      return {
-        candleData: candleResponse,
-        analyzeData: analyzeResult,
-      };
     };
 
-    const prefetchData = async () => {
-      // 모든 시간대 배열
-      const intervals = ["1", "3", "5", "15", "30", "60", "240", "D"];
-
-      // BTC - 모든 시간대 prefetch
-      for (const interval of intervals) {
-        queryClient.prefetchQuery({
-          queryKey: ["candles", "KRW-BTC", interval],
-          queryFn: () => fetchCombinedData("KRW-BTC", interval),
-          staleTime: 30 * 1000,
-        });
-      }
-
-      // 다른 코인들 - 15분봉만 prefetch
-      const otherCoins = ["SOL", "ETH", "DOGE"];
-      for (const coin of otherCoins) {
-        const crypto = CRYPTO_CURRENCIES[coin];
-        if (crypto) {
-          queryClient.prefetchQuery({
-            queryKey: ["candles", crypto.code, "15"],
-            queryFn: () => fetchCombinedData(crypto.code, "15"),
-            staleTime: 30 * 1000,
-          });
-        }
-      }
-    };
-
-    prefetchData();
-  }, [queryClient]);
+    fetchAllAnalyzeData();
+  }, []);
 
   // 업비트 WebSocket 연결 - 한 번만 연결하여 모든 코인 구독
   useEffect(() => {
@@ -237,9 +201,6 @@ export default function AITradingPage() {
   const currentPriceData = cryptoPrices[cryptoInfo.code];
   const currentPriceUSDData = cryptoPrices[cryptoInfo.usdtCode];
   
-  // 분석 데이터 추출
-  const analyzeData = combinedData?.analyzeData;
-
   return (
     <div className="px-0 py-6 space-y-4">
       {/* 코인 선택 버튼 */}
@@ -263,13 +224,12 @@ export default function AITradingPage() {
       <div className="px-6">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold text-white">{cryptoInfo.name}</h1>
-          {dataTimestamp && (
+          {combinedData?.candleData?.dataTime && (
             <span className="text-xs text-gray-500">
               데이터:{" "}
-              {new Date(dataTimestamp).toLocaleTimeString("ko-KR", {
+              {new Date(combinedData.candleData.dataTime).toLocaleTimeString("ko-KR", {
                 hour: "2-digit",
                 minute: "2-digit",
-                second: "2-digit",
               })}
             </span>
           )}
@@ -328,7 +288,7 @@ export default function AITradingPage() {
         interval={selectedInterval}
         locale="ko"
         onPriceUpdate={handlePriceUpdate}
-        onTimestampUpdate={handleTimestampUpdate}
+        analyzeData={analyzeData}
       />
 
       {/* 시간대 선택 버튼 */}
