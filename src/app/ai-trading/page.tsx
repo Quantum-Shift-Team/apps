@@ -31,14 +31,14 @@ export default function AITradingPage() {
 
   // 코인 정보를 가져옴
   const cryptoInfo = getCryptoInfo(selectedCrypto);
-  
+
   // 현재 선택된 코인의 캔들 데이터
   const { data: combinedData } = useCandleData(
     cryptoInfo.code,
     selectedInterval,
     true
   );
-  
+
   // 현재 선택된 코인의 분석 데이터
   const analyzeData = analyzeDataByMarket[cryptoInfo.code] || null;
 
@@ -62,18 +62,20 @@ export default function AITradingPage() {
   useEffect(() => {
     const fetchAllAnalyzeData = async () => {
       // 모든 코인 코드 가져오기
-      const allMarkets = Object.values(CRYPTO_CURRENCIES).map((crypto) => crypto.code);
-      
-      // 00분~05분 사이면 refresh: true
+      const allMarkets = Object.values(CRYPTO_CURRENCIES).map(
+        (crypto) => crypto.code
+      );
+
+      // 임시로는 항상 refresh: true
       const now = new Date();
-      const refresh = now.getMinutes() >= 0 && now.getMinutes() < 5;
-      
+      const refresh = true;
+
       try {
         const analyzeApiUrl = `/api/trading/analyze`;
         const analyzeResponse = await fetch(analyzeApiUrl, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             markets: allMarkets,
@@ -85,35 +87,50 @@ export default function AITradingPage() {
 
         if (analyzeResponse.ok) {
           const responseData = await analyzeResponse.json();
-          
+
           // 응답이 객체인 경우 각 코인별로 저장
-          if (responseData && typeof responseData === 'object') {
+          if (responseData && typeof responseData === "object") {
             // results 배열이 있는 경우
-            if ('results' in responseData && Array.isArray(responseData.results)) {
+            if (
+              "results" in responseData &&
+              Array.isArray(responseData.results)
+            ) {
               responseData.results.forEach((analyzeData: AnalyzeResponse) => {
-                if (analyzeData && analyzeData.market && Object.keys(analyzeData).length > 0) {
+                if (
+                  analyzeData &&
+                  analyzeData.market &&
+                  Object.keys(analyzeData).length > 0
+                ) {
                   setAnalyzeDataByMarket((prev) => ({
                     ...prev,
                     [analyzeData.market]: analyzeData,
                   }));
                 }
               });
-            } 
+            }
             // 배열인 경우
             else if (Array.isArray(responseData)) {
               responseData.forEach((analyzeData: AnalyzeResponse) => {
-                if (analyzeData && analyzeData.market && Object.keys(analyzeData).length > 0) {
+                if (
+                  analyzeData &&
+                  analyzeData.market &&
+                  Object.keys(analyzeData).length > 0
+                ) {
                   setAnalyzeDataByMarket((prev) => ({
                     ...prev,
                     [analyzeData.market]: analyzeData,
                   }));
                 }
               });
-            } 
+            }
             // 객체인 경우 (코인별로 키가 있는 경우)
             else {
               Object.entries(responseData).forEach(([market, analyzeData]) => {
-                if (analyzeData && typeof analyzeData === 'object' && Object.keys(analyzeData).length > 0) {
+                if (
+                  analyzeData &&
+                  typeof analyzeData === "object" &&
+                  Object.keys(analyzeData).length > 0
+                ) {
                   setAnalyzeDataByMarket((prev) => ({
                     ...prev,
                     [market]: analyzeData as AnalyzeResponse,
@@ -124,7 +141,7 @@ export default function AITradingPage() {
           }
         }
       } catch (error) {
-        console.warn('Failed to fetch analyze data:', error);
+        console.warn("Failed to fetch analyze data:", error);
       }
     };
 
@@ -192,7 +209,7 @@ export default function AITradingPage() {
   // 현재 선택된 코인의 가격 정보
   const currentPriceData = cryptoPrices[cryptoInfo.code];
   const currentPriceUSDData = cryptoPrices[cryptoInfo.usdtCode];
-  
+
   return (
     <div className="px-0 py-6 space-y-4">
       {/* 코인 선택 버튼 */}
@@ -219,10 +236,13 @@ export default function AITradingPage() {
           {combinedData?.candleData?.dataTime && (
             <span className="text-xs text-gray-500">
               데이터:{" "}
-              {new Date(combinedData.candleData.dataTime).toLocaleTimeString("ko-KR", {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
+              {new Date(combinedData.candleData.dataTime).toLocaleTimeString(
+                "ko-KR",
+                {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                }
+              )}
             </span>
           )}
         </div>
@@ -299,14 +319,25 @@ export default function AITradingPage() {
           {/* 매매 신호 */}
           {analyzeData.trading_signals && (
             <div className="bg-gray-800 rounded-lg p-4 space-y-2">
-              <h4 className="text-sm font-semibold text-gray-300 mb-3">매매 신호</h4>
+              <h4 className="text-sm font-semibold text-gray-300 mb-3">
+                매매 신호
+              </h4>
               <div className="grid grid-cols-1 gap-2">
-                {Object.entries(analyzeData.trading_signals).map(([key, value]) => (
-                  <div key={key} className="flex items-center justify-between">
-                    <span className="text-sm text-gray-400 capitalize">{key}:</span>
-                    <span className="text-sm font-medium text-white">{value}</span>
-                  </div>
-                ))}
+                {Object.entries(analyzeData.trading_signals).map(
+                  ([key, value]) => (
+                    <div
+                      key={key}
+                      className="flex items-center justify-between"
+                    >
+                      <span className="text-sm text-gray-400 capitalize">
+                        {key}:
+                      </span>
+                      <span className="text-sm font-medium text-white">
+                        {value}
+                      </span>
+                    </div>
+                  )
+                )}
               </div>
             </div>
           )}
@@ -314,7 +345,9 @@ export default function AITradingPage() {
           {/* 기술적 지표 요약 */}
           {analyzeData.technical_indicators && (
             <div className="bg-gray-800 rounded-lg p-4 space-y-2">
-              <h4 className="text-sm font-semibold text-gray-300 mb-3">주요 지표</h4>
+              <h4 className="text-sm font-semibold text-gray-300 mb-3">
+                주요 지표
+              </h4>
               <div className="grid grid-cols-2 gap-2">
                 {analyzeData.technical_indicators.rsi && (
                   <div className="flex items-center justify-between">
@@ -344,7 +377,9 @@ export default function AITradingPage() {
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-gray-400">ATR:</span>
                     <span className="text-xs font-medium text-white">
-                      {Math.round(analyzeData.technical_indicators.atr).toLocaleString()}
+                      {Math.round(
+                        analyzeData.technical_indicators.atr
+                      ).toLocaleString()}
                     </span>
                   </div>
                 )}
@@ -355,61 +390,81 @@ export default function AITradingPage() {
           {/* 상세 분석 리포트 */}
           {analyzeData.analysis_report && (
             <div className="bg-gray-800 rounded-lg p-4">
-              <h4 className="text-sm font-semibold text-blue-400 mb-3">상세 분석</h4>
+              <h4 className="text-sm font-semibold text-blue-400 mb-3">
+                상세 분석
+              </h4>
               <div className="text-gray-300 text-sm max-h-96 overflow-y-auto leading-relaxed">
-                {analyzeData.analysis_report.split('\n').map((line, idx) => {
+                {analyzeData.analysis_report.split("\n").map((line, idx) => {
                   const trimmedLine = line.trim();
-                  
+
                   // 빈 줄
                   if (!trimmedLine) {
                     return <div key={idx} className="h-2" />;
                   }
-                  
+
                   // H1 제목
-                  if (trimmedLine.startsWith('# ') && !trimmedLine.startsWith('##')) {
-                    const text = trimmedLine.replace('# ', '');
+                  if (
+                    trimmedLine.startsWith("# ") &&
+                    !trimmedLine.startsWith("##")
+                  ) {
+                    const text = trimmedLine.replace("# ", "");
                     return (
-                      <h1 key={idx} className="text-2xl font-bold text-blue-300 mb-3 mt-4 first:mt-0">
+                      <h1
+                        key={idx}
+                        className="text-2xl font-bold text-blue-300 mb-3 mt-4 first:mt-0"
+                      >
                         {text}
                       </h1>
                     );
                   }
-                  
+
                   // H2 제목
-                  if (trimmedLine.startsWith('## ') && !trimmedLine.startsWith('###')) {
-                    const text = trimmedLine.replace('## ', '');
+                  if (
+                    trimmedLine.startsWith("## ") &&
+                    !trimmedLine.startsWith("###")
+                  ) {
+                    const text = trimmedLine.replace("## ", "");
                     return (
-                      <h2 key={idx} className="text-xl font-bold text-cyan-400 mb-2 mt-3">
+                      <h2
+                        key={idx}
+                        className="text-xl font-bold text-cyan-400 mb-2 mt-3"
+                      >
                         {text}
                       </h2>
                     );
                   }
-                  
+
                   // H3 제목
-                  if (trimmedLine.startsWith('### ')) {
-                    const text = trimmedLine.replace('### ', '');
+                  if (trimmedLine.startsWith("### ")) {
+                    const text = trimmedLine.replace("### ", "");
                     return (
-                      <h3 key={idx} className="text-base font-semibold text-green-400 mb-2 mt-2">
+                      <h3
+                        key={idx}
+                        className="text-base font-semibold text-green-400 mb-2 mt-2"
+                      >
                         {text}
                       </h3>
                     );
                   }
-                  
+
                   // 구분선
-                  if (trimmedLine === '---') {
+                  if (trimmedLine === "---") {
                     return <hr key={idx} className="my-3 border-gray-600" />;
                   }
-                  
+
                   // 리스트 항목
-                  if (trimmedLine.startsWith('- ')) {
-                    const text = trimmedLine.replace('- ', '');
+                  if (trimmedLine.startsWith("- ")) {
+                    const text = trimmedLine.replace("- ", "");
                     return (
                       <div key={idx} className="flex items-start mb-1 pl-2">
                         <span className="text-blue-400 mr-2">•</span>
                         <span className="text-gray-200 flex-1">
-                          {text.split('**').map((part, partIdx) => 
+                          {text.split("**").map((part, partIdx) =>
                             partIdx % 2 === 1 ? (
-                              <strong key={partIdx} className="text-white font-semibold">
+                              <strong
+                                key={partIdx}
+                                className="text-white font-semibold"
+                              >
                                 {part}
                               </strong>
                             ) : (
@@ -420,13 +475,16 @@ export default function AITradingPage() {
                       </div>
                     );
                   }
-                  
+
                   // 일반 문단
                   return (
                     <p key={idx} className="text-gray-200 mb-2">
-                      {line.split('**').map((part, partIdx) => 
+                      {line.split("**").map((part, partIdx) =>
                         partIdx % 2 === 1 ? (
-                          <strong key={partIdx} className="text-blue-300 font-semibold">
+                          <strong
+                            key={partIdx}
+                            className="text-blue-300 font-semibold"
+                          >
                             {part}
                           </strong>
                         ) : (
