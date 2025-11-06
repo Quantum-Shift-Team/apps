@@ -3,11 +3,10 @@
 import { useState } from "react";
 
 interface UidSectionProps {
-  userId: string;
   initialUid: string | null;
 }
 
-export function UidSection({ userId, initialUid }: UidSectionProps) {
+export function UidSection({ initialUid }: UidSectionProps) {
   const [uid, setUid] = useState(initialUid || "");
   const [isEditing, setIsEditing] = useState(!initialUid);
   const [isSubmitting, setIsSubmitting] = useState(false);

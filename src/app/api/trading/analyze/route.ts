@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { Prisma } from '@prisma/client';
 
 interface AnalyzeRequest {
   markets?: string[]; // 코인 배열 (선택적, 없으면 모든 코인)
@@ -15,7 +14,11 @@ export async function POST(request: NextRequest) {
     const { markets, interval, hours } = body;
 
     // DB에서 분석 데이터 조회
-    const whereClause: Prisma.TradingAnalyzeWhereInput = {
+    const whereClause: {
+      interval: number;
+      hours: number;
+      market?: { in: string[] };
+    } = {
       interval,
       hours,
     };

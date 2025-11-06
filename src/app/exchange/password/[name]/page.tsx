@@ -5,7 +5,6 @@ import { notFound } from "next/navigation";
 import { use } from "react";
 import Image from "next/image";
 import { BackHeader } from "@/components/layout/BackHeader";
-import { LAYOUT_CONSTANTS } from "@/lib/constants";
 import { FixedBottomButton } from "@/components/ui/FixedBottomButton";
 
 interface ExchangePasswordPageProps {
