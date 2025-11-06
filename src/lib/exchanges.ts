@@ -71,6 +71,7 @@ export const EXCHANGES = [
     logo: '/exchanges/binance/binance_logo_icon.svg',
     logoSize: 'w-8 h-8 object-contain scale-150',
     signupGuideImage: '/exchanges/binance/binance_signup_guide.png',
+    verificationGuideImage: '/exchanges/binance/binance_verification_code_guide.png',
     paybackRate: 40,
     makerFee: 0.012,
     takerFee: 0.03,
