@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { PrismaClient } from '@prisma/client';
 
 interface AnalyzeRequest {
   markets?: string[]; // 코인 배열 (선택적, 없으면 모든 코인)
@@ -31,13 +32,22 @@ export async function POST(request: NextRequest) {
     }
 
     // 최신 데이터만 가져오기 (created_at 기준 내림차순)
-    // Prisma Client에서 tradingAnalyze 모델 접근 (camelCase 변환)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const tradingAnalyzeModel = (db as any).tradingAnalyze;
+    // Prisma Client에서 tradingAnalyze 모델 접근
+    // Next.js 서버리스 환경에서 타입 인식 문제를 피하기 위해 명시적 접근
+    const tradingAnalyzeModel = (db as PrismaClient).tradingAnalyze;
     
     if (!tradingAnalyzeModel || typeof tradingAnalyzeModel.findMany !== 'function') {
-      console.error('TradingAnalyze model not found. Available models:', Object.keys(db || {}));
-      throw new Error('TradingAnalyze model is not available. Please ensure Prisma Client is generated correctly.');
+      // 디버깅: 사용 가능한 모델 확인
+      const dbAny = db as unknown as Record<string, unknown>;
+      const availableModels = Object.keys(dbAny).filter(
+        key => {
+          const model = dbAny[key];
+          return typeof model === 'object' && model !== null && 'findMany' in model;
+        }
+      );
+      console.error('TradingAnalyze model not found. Available models:', availableModels);
+      console.error('db type:', typeof db, 'db keys:', Object.keys(db || {}));
+      throw new Error(`TradingAnalyze model is not available. Available models: ${availableModels.join(', ')}`);
     }
 
     const analyzeDataList = await tradingAnalyzeModel.findMany({
