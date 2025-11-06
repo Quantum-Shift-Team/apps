@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Analyze API error:', error);
     return NextResponse.json(
-      { error: 'Failed to process analyze request' },
+      { error: 'Failed to process analyze request ' + error },
       { status: 500 }
     );
   }
