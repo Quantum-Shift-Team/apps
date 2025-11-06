@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { PrismaClient } from '@prisma/client';
 
 interface AnalyzeRequest {
   markets?: string[]; // 코인 배열 (선택적, 없으면 모든 코인)
@@ -33,8 +32,9 @@ export async function POST(request: NextRequest) {
 
     // 최신 데이터만 가져오기 (created_at 기준 내림차순)
     // Prisma Client에서 tradingAnalyze 모델 접근
-    // Next.js 서버리스 환경에서 타입 인식 문제를 피하기 위해 명시적 접근
-    const tradingAnalyzeModel = (db as PrismaClient).tradingAnalyze;
+    // TypeScript 타입 인식 문제를 피하기 위해 타입 단언 사용
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const tradingAnalyzeModel = (db as any).tradingAnalyze;
     
     if (!tradingAnalyzeModel || typeof tradingAnalyzeModel.findMany !== 'function') {
       // 디버깅: 사용 가능한 모델 확인
