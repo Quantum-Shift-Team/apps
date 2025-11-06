@@ -31,8 +31,16 @@ export async function POST(request: NextRequest) {
     }
 
     // 최신 데이터만 가져오기 (created_at 기준 내림차순)
+    // Prisma Client에서 tradingAnalyze 모델 접근 (camelCase 변환)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const analyzeDataList = await (db as any).tradingAnalyze.findMany({
+    const tradingAnalyzeModel = (db as any).tradingAnalyze;
+    
+    if (!tradingAnalyzeModel || typeof tradingAnalyzeModel.findMany !== 'function') {
+      console.error('TradingAnalyze model not found. Available models:', Object.keys(db || {}));
+      throw new Error('TradingAnalyze model is not available. Please ensure Prisma Client is generated correctly.');
+    }
+
+    const analyzeDataList = await tradingAnalyzeModel.findMany({
       where: whereClause,
       orderBy: {
         created_at: 'desc',
