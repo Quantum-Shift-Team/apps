@@ -25,3 +25,21 @@ model User {
 
   @@map("users")
 }
+
+model TradingAnalyze {
+  id                  Int      @id @default(autoincrement())
+  market              String   @db.VarChar(50)
+  interval            Int
+  hours               Int
+  current_price       Float
+  lowest_price        Float
+  highest_price       Float
+  analysis_report     String   @db.Text
+  technical_indicators Json?
+  trading_signals     Json?
+  created_at          DateTime @default(now())
+
+  @@index([id])
+  @@index([market])
+  @@map("trading_analyze")
+}
