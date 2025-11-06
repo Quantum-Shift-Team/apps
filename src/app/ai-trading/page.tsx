@@ -67,7 +67,6 @@ export default function AITradingPage() {
       );
 
       // 임시로는 항상 refresh: true
-      const now = new Date();
       const refresh = true;
 
       try {

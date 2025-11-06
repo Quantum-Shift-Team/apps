@@ -31,7 +31,8 @@ export async function POST(request: NextRequest) {
     }
 
     // 최신 데이터만 가져오기 (created_at 기준 내림차순)
-    const analyzeDataList = await db.tradingAnalyze.findMany({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const analyzeDataList = await (db as any).tradingAnalyze.findMany({
       where: whereClause,
       orderBy: {
         created_at: 'desc',
