@@ -37,7 +37,7 @@ export default function ExchangeSignupPage({ params }: ExchangeSignupPageProps) 
           전화번호를 입력해주세요.
         </h1>
         <p className="text-sm text-blue-500">
-          버튼을 누르면 바로 거래소 가입 화면으로 이동해요!
+          다음 버튼을 누르고 가입을 진행해주세요.
         </p>
       </div>
         <div className="w-70 mx-auto">

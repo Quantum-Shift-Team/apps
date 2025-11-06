@@ -88,7 +88,7 @@ export default function ExchangeNewPage({ params }: ExchangeNewPageProps) {
       </div>
 
       {/* 다음 버튼 */}
-      <FixedBottomButton onClick={handleSignupClick}>
+      <FixedBottomButton onClick={handleSignupClick} tipMessage="다시 퀀텀시프트로 돌아와주세요!">
         3분 만에 가입하기
       </FixedBottomButton>
     </div>
