@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { db } from '@/lib/db';
 
 interface AnalyzeRequest {
   markets?: string[]; // 코인 배열 (선택적, 없으면 모든 코인)
@@ -10,42 +11,93 @@ interface AnalyzeRequest {
 export async function POST(request: NextRequest) {
   try {
     const body: AnalyzeRequest = await request.json();
-    const { markets, interval, hours, refresh } = body;
+    const { markets, interval, hours } = body;
 
-    // AI_SERVER 환경 변수 확인
-    const aiServer = process.env.AI_SERVER;
+    // DB에서 분석 데이터 조회
+    const whereClause: {
+      interval: number;
+      hours: number;
+      market?: { in: string[] };
+    } = {
+      interval,
+      hours,
+    };
 
-    // AI 서버로 분석 요청
-    const aiApiUrl = `${aiServer}/trading/analyze`;
-    
-    const response = await fetch(aiApiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ...(markets && { markets }), // markets가 있으면 포함
-        interval,
-        hours,
-        ...(refresh !== undefined && { refresh }), // refresh가 있으면 포함
-      }),
-    });
-
-    if (!response.ok) {
-      console.error('AI server error:', response.status, response.statusText);
-      return NextResponse.json(
-        { error: 'AI server request failed' },
-        { status: response.status }
-      );
+    // markets가 지정된 경우 해당 마켓들만 조회
+    if (markets && markets.length > 0) {
+      whereClause.market = {
+        in: markets,
+      };
     }
 
-    const data = await response.json();
-    return NextResponse.json(data);
+    // 최신 데이터만 가져오기 (created_at 기준 내림차순)
+    // Prisma Client에서 tradingAnalyze 모델 접근
+    // TypeScript 타입 인식 문제를 피하기 위해 타입 단언 사용
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const tradingAnalyzeModel = (db as any).tradingAnalyze;
+    
+    if (!tradingAnalyzeModel || typeof tradingAnalyzeModel.findMany !== 'function') {
+      // 디버깅: 사용 가능한 모델 확인
+      const dbAny = db as unknown as Record<string, unknown>;
+      const availableModels = Object.keys(dbAny).filter(
+        key => {
+          const model = dbAny[key];
+          return typeof model === 'object' && model !== null && 'findMany' in model;
+        }
+      );
+      console.error('TradingAnalyze model not found. Available models:', availableModels);
+      console.error('db type:', typeof db, 'db keys:', Object.keys(db || {}));
+      throw new Error(`TradingAnalyze model is not available. Available models: ${availableModels.join(', ')}`);
+    }
+
+    const analyzeDataList = await tradingAnalyzeModel.findMany({
+      where: whereClause,
+      orderBy: {
+        created_at: 'desc',
+      },
+    });
+
+    // 각 마켓별로 가장 최신 데이터만 선택
+    const latestByMarket = new Map<string, typeof analyzeDataList[0]>();
+    
+    for (const data of analyzeDataList) {
+      if (!latestByMarket.has(data.market)) {
+        latestByMarket.set(data.market, data);
+      }
+    }
+
+    // 응답 형식 변환
+    const results = Array.from(latestByMarket.values()).map((data) => ({
+      id: data.id,
+      market: data.market,
+      interval: data.interval,
+      hours: data.hours,
+      current_price: data.current_price,
+      lowest_price: data.lowest_price,
+      highest_price: data.highest_price,
+      analysis_report: data.analysis_report,
+      technical_indicators: data.technical_indicators as Record<string, number> | undefined,
+      trading_signals: data.trading_signals as Record<string, string> | undefined,
+      created_at: data.created_at,
+    }));
+
+    // markets가 지정된 경우와 아닌 경우 응답 형식 다르게 처리
+    if (markets && markets.length > 0) {
+      // 배열로 반환
+      return NextResponse.json(results);
+    } else {
+      // 객체 형태로 반환 (마켓별로 키가 있는 형태)
+      const resultObject: Record<string, typeof results[0]> = {};
+      results.forEach((result) => {
+        resultObject[result.market] = result;
+      });
+      return NextResponse.json(resultObject);
+    }
 
   } catch (error) {
     console.error('Analyze API error:', error);
     return NextResponse.json(
-      { error: 'Failed to process analyze request' },
+      { error: 'Failed to process analyze request ' + error },
       { status: 500 }
     );
   }
