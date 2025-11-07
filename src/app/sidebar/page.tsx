@@ -40,7 +40,7 @@ export default function SidebarPage() {
                 />
               </svg>
             </button>
-            <h1 className="text-lg font-bold text-white">Quantum Shift</h1>
+            <h1 className="text-xl font-bold text-white">Quantum Shift</h1>
             <div className="w-10"></div> {/* 공간 확보용 */}
           </div>
         </div>
