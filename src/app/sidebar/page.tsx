@@ -16,7 +16,7 @@ export default function SidebarPage() {
   const telegramUrl = "https://t.me/your_telegram_channel";
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-gray-900 flex flex-col relative">
       {/* 헤더 */}
       <header className="bg-gray-800 border-b border-gray-700 h-16 flex flex-col justify-center items-start">
         <div className="px-4">
@@ -191,9 +191,8 @@ export default function SidebarPage() {
       </div>
 
       {/* 하단 정보 */}
-      <div className="absolute bottom-0 left-0 right-0 p-3 bg-gray-800">
+      <div className="fixed bottom-0 left-0 right-0 p-3 bg-gray-900 z-10">
         <div className="text-center text-gray-400 text-xs">
-          <p>Quantum Shift</p>
           <p className="mt-1">암호화폐 거래소 비교 플랫폼</p>
         </div>
       </div>
