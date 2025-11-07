@@ -6,15 +6,15 @@ import { use } from "react";
 import Image from "next/image";
 import { FixedBottomButton } from "@/components/ui/FixedBottomButton";
 
-interface ExchangeVerifiedPageProps {
+interface ExchangeDocumentVerificationPageProps {
   params: Promise<{
     name: string;
   }>;
 }
 
-export default function ExchangeVerifiedPage({
+export default function ExchangeDocumentVerificationPage({
   params,
-}: ExchangeVerifiedPageProps) {
+}: ExchangeDocumentVerificationPageProps) {
   const { name } = use(params);
   const exchange = EXCHANGES.find(
     (ex) => ex.id.toLowerCase() === name.toLowerCase()
@@ -24,15 +24,15 @@ export default function ExchangeVerifiedPage({
     notFound();
   }
 
-  // verificationGuideImage가 있으면 사용하고, 없으면 signupGuideImage 사용
-  const verificationGuideImage: string | null =
-    "verificationGuideImage" in exchange
-      ? (exchange.verificationGuideImage as string)
+  // documentVerificationGuideImage가 있으면 사용하고, 없으면 signupGuideImage 사용
+  const documentVerificationGuideImage: string | null =
+    "documentVerificationGuideImage" in exchange
+      ? (exchange.documentVerificationGuideImage as string)
       : "signupGuideImage" in exchange
       ? (exchange.signupGuideImage as string)
       : null;
 
-  if (!verificationGuideImage) {
+  if (!documentVerificationGuideImage) {
     return null;
   }
 
@@ -42,22 +42,25 @@ export default function ExchangeVerifiedPage({
       <div className="flex flex-col items-start gap-2 p-6">
         <p className="text-sm text-gray-400">해외 거래소 가입하기</p>
         <h1 className="text-2xl font-bold text-white">
-          인증번호를 입력해주세요.
+          인증 방법을 선택하세요.
         </h1>
         <p className="text-sm text-blue-500">
-          인증번호 입력 후 Continue 버튼을 눌러주세요!
+          사진을 업로드 하거나 촬영하면 됩니다!
         </p>
       </div>
       <div className="w-70 mx-auto">
         <Image
-          src={verificationGuideImage}
-          alt={`${exchange.name} 인증번호 가이드`}
+          src={documentVerificationGuideImage}
+          alt={`${exchange.name} 문서 인증 가이드`}
           width={800}
           height={1200}
           className="w-full max-w-2xl h-auto object-contain rounded-lg"
         />
 
-        <FixedBottomButton href={`/exchange/identify/${name}`} bgOpacity={90}>
+        <FixedBottomButton
+          href={`/exchange/id-document-upload/${name}`}
+          bgOpacity={90}
+        >
           다음
         </FixedBottomButton>
       </div>

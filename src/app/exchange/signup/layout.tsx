@@ -9,15 +9,15 @@ export default function SignupLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const exchangeName = pathname.split('/').pop();
-  
+  const exchangeName = pathname.split("/").pop();
+
   return (
     <div className="bg-gray-900">
-      <BackHeader backLink={`/exchange/newpage/${exchangeName}`} />
-      <main>
-        {children}
-      </main>
+      <BackHeader
+        backLink={`/exchange/newpage/${exchangeName}`}
+        showCustomerService={true}
+      />
+      <main>{children}</main>
     </div>
   );
 }
-

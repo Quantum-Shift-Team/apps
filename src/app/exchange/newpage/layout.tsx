@@ -9,11 +9,14 @@ export default function NewPageLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const exchangeName = pathname.split('/').pop();
-  
+  const exchangeName = pathname.split("/").pop();
+
   return (
     <>
-      <BackHeader backLink={`/exchange/${exchangeName}`} />
+      <BackHeader
+        backLink={`/exchange/${exchangeName}`}
+        showCustomerService={true}
+      />
       {children}
     </>
   );

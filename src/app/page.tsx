@@ -1,6 +1,6 @@
 "use client";
 
-import { useState} from "react";
+import { useState } from "react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { DynamicBanner } from "@/components/layout/DynamicBanner";
 import { ExchangeSection } from "./ExchangeSection";
@@ -8,6 +8,7 @@ import { RealtimePaybackSection } from "./RealtimePaybackSection";
 import { PaybackCalculator } from "./PaybackCalculator";
 import { BackHeader } from "@/components/layout/BackHeader";
 import { LAYOUT_CONSTANTS } from "@/lib/constants";
+import { FloatingContactButtons } from "@/components/ui/FloatingContactButtons";
 
 export default function Home() {
   const [showCalculator, setShowCalculator] = useState(false);
@@ -18,10 +19,10 @@ export default function Home() {
     const scrollY = window.scrollY;
     setShowCalculator(true);
     // 메인 페이지 스크롤 막기 (위치 유지)
-    document.body.style.position = 'fixed';
+    document.body.style.position = "fixed";
     document.body.style.top = `-${scrollY}px`;
-    document.body.style.width = '100%';
-    document.body.style.overflow = 'hidden';
+    document.body.style.width = "100%";
+    document.body.style.overflow = "hidden";
     // 애니메이션 시작을 위해 약간의 지연
     setTimeout(() => {
       setIsAnimating(true);
@@ -32,11 +33,11 @@ export default function Home() {
     setIsAnimating(false);
     // 메인 페이지 스크롤 복원
     const scrollY = document.body.style.top;
-    document.body.style.position = '';
-    document.body.style.top = '';
-    document.body.style.width = '';
-    document.body.style.overflow = '';
-    window.scrollTo(0, parseInt(scrollY || '0') * -1);
+    document.body.style.position = "";
+    document.body.style.top = "";
+    document.body.style.width = "";
+    document.body.style.overflow = "";
+    window.scrollTo(0, parseInt(scrollY || "0") * -1);
     setTimeout(() => {
       setShowCalculator(false);
     }, 500);
@@ -45,11 +46,13 @@ export default function Home() {
   return (
     <MainLayout>
       <DynamicBanner />
-      
+
       {/* 메인 콘텐츠 - 헤더 높이만큼 패딩 적용 */}
-      <div 
+      <div
         className="md:pt-0"
-        style={{ paddingTop: `${(LAYOUT_CONSTANTS.HEADER_HEIGHT+7) * 0.25}rem` }}
+        style={{
+          paddingTop: `${(LAYOUT_CONSTANTS.HEADER_HEIGHT + 7) * 0.25}rem`,
+        }}
       >
         {/* 광고판 - 화면 꽉차게 */}
         <div
@@ -81,9 +84,11 @@ export default function Home() {
 
       {/* 계산기 오버레이 */}
       {showCalculator && (
-        <div className={`fixed inset-0 z-50 bg-gray-900 transform transition-transform duration-500 ease-out ${
-          isAnimating ? 'translate-x-0' : 'translate-x-full'
-        }`}>
+        <div
+          className={`fixed inset-0 z-50 bg-gray-900 transform transition-transform duration-500 ease-out ${
+            isAnimating ? "translate-x-0" : "translate-x-full"
+          }`}
+        >
           <BackHeader backLink="/" onClose={closeCalculator} />
           <div className="calculator-scroll-container h-full overflow-y-auto pt-14">
             <div className="w-full max-w-4xl mx-auto px-6">
@@ -92,6 +97,9 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      {/* 플로팅 연락처 버튼 */}
+      <FloatingContactButtons />
     </MainLayout>
   );
 }

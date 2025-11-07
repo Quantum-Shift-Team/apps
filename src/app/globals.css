@@ -56,3 +56,35 @@ body {
 .slide-down-animation {
   animation: slideDownToBottom 0.3s ease-in forwards;
 }
+
+/* 신분증 촬영 애니메이션 */
+@keyframes scanLine {
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes flash {
+  0%, 100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+.scan-line-animation {
+  animation: scanLine 2s ease-in-out infinite;
+}
+
+.flash-animation {
+  animation: flash 0.2s ease-out;
+}

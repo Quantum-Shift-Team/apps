@@ -8,7 +8,7 @@ interface MainLayoutProps {
 
 export function MainLayout({ children }: MainLayoutProps) {
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="bg-gray-900">
       <Header />
       <main className="bg-gray-900">
         {children}
