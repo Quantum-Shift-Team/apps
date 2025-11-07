@@ -192,8 +192,8 @@ export default function SidebarPage() {
 
       {/* 하단 정보 */}
       <div className="fixed bottom-0 left-0 right-0 p-3 bg-gray-900 z-10">
-        <div className="text-center text-gray-400 text-xs">
-          <p className="mt-1">암호화폐 거래소 비교 플랫폼</p>
+        <div className="text-gray-400 text-xs px-4">
+          <p className="mt-1">암호화폐 거래소 비교 플랫폼 version 1.0.0</p>
         </div>
       </div>
     </div>
