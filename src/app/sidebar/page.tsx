@@ -40,7 +40,7 @@ export default function SidebarPage() {
                 />
               </svg>
             </button>
-            <h1 className="text-xl font-bold text-white">Quantum Shift</h1>
+            <h1 className="text-lg font-bold text-white">Quantum Shift</h1>
             <div className="w-10"></div> {/* 공간 확보용 */}
           </div>
         </div>
@@ -51,7 +51,7 @@ export default function SidebarPage() {
         <nav className="w-full px-4">
           {/* 고객센터 섹션 */}
           <div className="mb-6">
-            <h2 className="text-sm font-semibold text-gray-400 mb-2 px-3">
+            <h2 className="text-xs font-semibold text-gray-400 mb-2 px-3">
               고객센터
             </h2>
             <ul className="space-y-1">
@@ -63,8 +63,8 @@ export default function SidebarPage() {
                   className="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors text-left"
                 >
                   <div className="flex items-center space-x-2">
-                    <span className="font-tossface text-lg">💬</span>
-                    <span className="text-base">카카오톡 문의하기</span>
+                    <span className="font-tossface text-base">💬</span>
+                    <span className="text-sm">카카오톡 문의하기</span>
                   </div>
                 </a>
               </li>
@@ -76,8 +76,8 @@ export default function SidebarPage() {
                   className="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors text-left"
                 >
                   <div className="flex items-center space-x-2">
-                    <span className="font-tossface text-lg">✈️</span>
-                    <span className="text-base">텔레그램 문의하기</span>
+                    <span className="font-tossface text-base">✈️</span>
+                    <span className="text-sm">텔레그램 문의하기</span>
                   </div>
                 </a>
               </li>
@@ -86,7 +86,7 @@ export default function SidebarPage() {
 
           {/* 거래소 목록 섹션 */}
           <div className="mb-6">
-            <h2 className="text-sm font-semibold text-gray-400 mb-2 px-3">
+            <h2 className="text-xs font-semibold text-gray-400 mb-2 px-3">
               거래소
             </h2>
             <ul className="space-y-1">
@@ -113,7 +113,7 @@ export default function SidebarPage() {
                           {exchange.logo}
                         </span>
                       )}
-                      <span className="text-base">{exchange.name}</span>
+                      <span className="text-sm">{exchange.name}</span>
                     </div>
                   </Link>
                 </li>
@@ -123,7 +123,7 @@ export default function SidebarPage() {
 
           {/* 메뉴 섹션 */}
           <div className="mb-6">
-            <h2 className="text-sm font-semibold text-gray-400 mb-2 px-3">
+            <h2 className="text-xs font-semibold text-gray-400 mb-2 px-3">
               메뉴
             </h2>
             <ul className="space-y-1">
@@ -133,8 +133,8 @@ export default function SidebarPage() {
                   className="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors text-left"
                 >
                   <div className="flex items-center space-x-2">
-                    <span className="font-tossface text-lg">🏠</span>
-                    <span className="text-base">홈</span>
+                    <span className="font-tossface text-base">🏠</span>
+                    <span className="text-sm">홈</span>
                   </div>
                 </Link>
               </li>
@@ -145,8 +145,8 @@ export default function SidebarPage() {
                   className="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors text-left"
                 >
                   <div className="flex items-center space-x-2">
-                    <span className="font-tossface text-lg">🧮</span>
-                    <span className="text-base">수수료 계산기</span>
+                    <span className="font-tossface text-base">🧮</span>
+                    <span className="text-sm">수수료 계산기</span>
                   </div>
                 </Link>
               </li>
@@ -157,8 +157,8 @@ export default function SidebarPage() {
                   className="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors text-left"
                 >
                   <div className="flex items-center space-x-2">
-                    <span className="font-tossface text-lg">🤖</span>
-                    <span className="text-base">AI 스켈핑 매매</span>
+                    <span className="font-tossface text-base">🤖</span>
+                    <span className="text-sm">AI 스켈핑 매매</span>
                   </div>
                 </Link>
               </li>
@@ -169,8 +169,8 @@ export default function SidebarPage() {
                   className="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors text-left"
                 >
                   <div className="flex items-center space-x-2">
-                    <span className="font-tossface text-lg">🔐</span>
-                    <span className="text-base">로그인</span>
+                    <span className="font-tossface text-base">🔐</span>
+                    <span className="text-sm">로그인</span>
                   </div>
                 </Link>
               </li>
@@ -181,7 +181,7 @@ export default function SidebarPage() {
 
       {/* 하단 정보 */}
       <div className="absolute bottom-0 left-0 right-0 p-3 bg-gray-800">
-        <div className="text-center text-gray-400 text-sm">
+        <div className="text-center text-gray-400 text-xs">
           <p>Quantum Shift</p>
           <p className="mt-1">암호화폐 거래소 비교 플랫폼</p>
         </div>
