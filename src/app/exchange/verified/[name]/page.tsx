@@ -57,7 +57,7 @@ export default function ExchangeVerifiedPage({
           className="w-full max-w-2xl h-auto object-contain rounded-lg"
         />
 
-        <FixedBottomButton href={`/exchange/identify/${name}`} bgOpacity={90}>
+        <FixedBottomButton href={`/exchange/password/${name}`} bgOpacity={90}>
           다음
         </FixedBottomButton>
       </div>

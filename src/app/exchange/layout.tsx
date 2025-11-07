@@ -29,6 +29,10 @@ export default function ExchangeLayout({
       const name = pathname.split("/exchange/document-verification/")[1];
       return name ? `/exchange/identify/${name}` : "/";
     }
+    if (pathname?.includes("/exchange/password/")) {
+      const name = pathname.split("/exchange/password/")[1];
+      return name ? `/exchange/verified/${name}` : "/";
+    }
     if (pathname?.includes("/exchange/verified/")) {
       const name = pathname.split("/exchange/verified/")[1];
       return name ? `/exchange/signup/${name}` : "/";
@@ -48,6 +52,7 @@ export default function ExchangeLayout({
   const shouldShowCustomerService =
     pathname?.includes("/exchange/signup/") ||
     pathname?.includes("/exchange/verified/") ||
+    pathname?.includes("/exchange/password/") ||
     pathname?.includes("/exchange/identify/") ||
     pathname?.includes("/exchange/document-verification/") ||
     pathname?.includes("/exchange/id-document-upload/") ||
