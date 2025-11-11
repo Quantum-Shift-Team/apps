@@ -43,7 +43,7 @@ export default async function MyPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-gray-900 max-w-3xl mx-auto">
       <BackHeader
         backLink="/"
         title={`${user.nickname || "사용자"}님의 정보`}

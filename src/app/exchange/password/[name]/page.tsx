@@ -37,7 +37,10 @@ export default function ExchangePasswordPage({
 
   return (
     <div className="min-h-screen bg-gray-900">
-      <BackHeader backLink={`/exchange/password/${exchange.id}`} />
+      <BackHeader
+        backLink={`/exchange/verified/${name}`}
+        showCustomerService={true}
+      />
       <main>
         {/* 상단 텍스트 - 왼쪽 정렬 */}
         <div className="flex flex-col items-start gap-2 p-6">

@@ -15,7 +15,7 @@ export function Sidebar() {
       className="hidden md:flex md:flex-col fixed left-0 bottom-0 w-64 bg-gray-900 border-r border-gray-800 overflow-y-auto"
       style={{ top: `${TOP_OFFSET_REM}rem` }}
     >
-      <nav className="px-4 pb-6 space-y-6 text-gray-300">
+      <nav className="p-4 space-y-6 text-gray-300">
         <div>
           <h2 className="text-xs font-semibold text-gray-400 mb-2 px-3">
             고객센터

@@ -46,7 +46,7 @@ function LoginContent() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-gray-900 max-w-3xl mx-auto">
       {/* 고정 헤더 */}
       <BackHeader backLink="/" />
 

@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 interface CustomerServiceModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -26,7 +24,7 @@ export function CustomerServiceModal({
       />
 
       {/* 모달 */}
-      <div className="fixed bottom-0 left-0 right-0 bg-gray-800 rounded-t-3xl z-[201] animate-[slideUp_0.3s_ease-out] max-h-[80vh] overflow-y-auto">
+      <div className="fixed bottom-0 left-0 right-0 bg-gray-800 rounded-t-3xl z-[201] animate-[slideUp_0.3s_ease-out] max-h-[80vh] overflow-y-auto max-w-3xl mx-auto">
         <div className="p-6">
           {/* 헤더 */}
           <div className="flex items-center justify-between mb-6">

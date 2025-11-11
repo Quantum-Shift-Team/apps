@@ -33,7 +33,7 @@ export default function ExchangeNewPage({ params }: ExchangeNewPageProps) {
   };
 
   return (
-    <div className="flex flex-col px-6 py-6">
+    <div className="flex flex-col px-6 py-6 max-w-3xl mx-auto">
       {/* 상단 텍스트 - 왼쪽 정렬 */}
       <div className="flex flex-col items-start gap-2 mb-8">
         <p className="text-sm text-gray-400">해외 거래소 가입하기</p>

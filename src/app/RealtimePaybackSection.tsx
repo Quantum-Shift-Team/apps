@@ -69,7 +69,7 @@ export function RealtimePaybackSection() {
 
   return (
     <div className="px-6 py-6 bg-gray-900 text-white">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-3xl mx-auto">
         {/* 실시간 페이백 리스트 뷰 */}
         <div className="text-center mb-8">
           <h2 className="text-2xl md:text-4xl font-bold mb-2">

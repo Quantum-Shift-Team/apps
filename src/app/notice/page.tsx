@@ -16,7 +16,7 @@ export default function NoticePage() {
     <div className="min-h-screen bg-gray-900">
       <BackHeader backLink="/" title="공지사항" showCustomerService={true} />
 
-      <div className="pt-20 px-4 pb-8">
+      <div className="pt-20 px-4 pb-8 max-w-3xl mx-auto">
         {/* 검색창 */}
         <div className="mb-4">
           <div className="relative">

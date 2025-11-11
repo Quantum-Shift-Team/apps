@@ -66,7 +66,7 @@ export default function ExchangeLayout({
         showCustomerService={shouldShowCustomerService}
       />
       <main
-        className="pb-24"
+        className="pb-24 max-w-3xl mx-auto"
         style={{
           paddingTop: `${LAYOUT_CONSTANTS.BACK_HEADER_HEIGHT * 0.25}rem`,
         }}

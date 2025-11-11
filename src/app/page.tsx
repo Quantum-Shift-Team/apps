@@ -68,7 +68,7 @@ export default function Home() {
 
         {/* 페이백 계산기 섹션 */}
         <div className="px-6 py-2 bg-gray-900 text-white mb-8">
-          <div className="max-w-4xl mx-auto text-center">
+          <div className="max-w-3xl mx-auto text-center">
             <button
               onClick={openCalculator}
               className="inline-block w-[90%] py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors font-medium"
@@ -91,7 +91,7 @@ export default function Home() {
         >
           <BackHeader backLink="/" onClose={closeCalculator} />
           <div className="calculator-scroll-container h-full overflow-y-auto pt-14">
-            <div className="w-full max-w-4xl mx-auto px-6">
+            <div className="w-full max-w-3xl mx-auto px-6">
               <PaybackCalculator onClose={closeCalculator} />
             </div>
           </div>
