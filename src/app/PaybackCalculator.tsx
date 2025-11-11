@@ -6,7 +6,7 @@ import Image from "next/image";
 import { FixedBottomButton } from "@/components/ui/FixedBottomButton";
 
 
-export function PaybackCalculator({ onClose: _onClose }: { onClose: () => void }) {
+export function PaybackCalculator() {
   const [selectedExchange, setSelectedExchange] = useState<string | null>(null);
   const [leverage, setLeverage] = useState<number>(1);
   const [seedMoney, setSeedMoney] = useState<number>(50); // 초기값 50 = 50만원

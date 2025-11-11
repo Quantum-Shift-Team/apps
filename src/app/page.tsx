@@ -92,7 +92,7 @@ export default function Home() {
           <BackHeader backLink="/" onClose={closeCalculator} />
           <div className="calculator-scroll-container h-full overflow-y-auto pt-14">
             <div className="w-full max-w-3xl mx-auto px-6">
-              <PaybackCalculator onClose={closeCalculator} />
+              <PaybackCalculator />
             </div>
           </div>
         </div>

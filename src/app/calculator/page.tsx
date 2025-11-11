@@ -14,7 +14,7 @@ export default function CalculatorPage() {
       {/* 계산기 페이지 - 헤더 높이만큼 패딩 적용 */}
       <div className="min-h-screen flex items-start justify-center">
         <div className="w-full max-w-3xl mx-auto px-8">
-          <PaybackCalculator onClose={() => window.history.back()} />
+          <PaybackCalculator />
         </div>
       </div>
     </div>
