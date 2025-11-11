@@ -75,10 +75,10 @@ export function DynamicBanner() {
 
   return (
     <div
-      className={`w-full ${banners[displayBannerIndex].color} transition-colors duration-500 fixed left-0 right-0 z-40 md:relative md:top-auto md:z-auto h-7`}
+      className={`w-full ${banners[displayBannerIndex].color} transition-colors duration-500 fixed left-0 md:left-64 right-0 z-40 h-7`}
       style={{ top: `${LAYOUT_CONSTANTS.HEADER_HEIGHT * 0.25}rem` }}
     >
-      <div className="max-w-7xl mx-auto px-4 md:px-6 overflow-hidden h-[28px] relative">
+      <div className="max-w-4xl w-full mx-auto md:mx-0 md:mr-8 px-4 overflow-hidden h-[28px] relative">
         {/* 슬라이딩 컨테이너 */}
         <div
           className={
@@ -96,7 +96,7 @@ export function DynamicBanner() {
               <div className="flex items-center justify-center w-full relative">
                 <div className="flex items-center space-x-2 text-center">
                   <span className="font-tossface text-xs">{banner.icon}</span>
-                  <span className="font-semibold text-white text-[10px] md:text-xs">
+                  <span className="font-semibold text-white text-[10px]">
                     {banner.title} - {banner.description}
                   </span>
                 </div>
