@@ -33,7 +33,7 @@ export function FixedBottomButton({
       className="fixed bottom-0 left-0 right-0 px-4 pb-4 z-50"
       style={bgStyle}
     >
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-3xl mx-auto">
         <div className="text-center relative">
           {tipMessage && (
             <div className="absolute -top-5 right-[5%] z-100 animate-bounce">

@@ -28,7 +28,7 @@ export default function ExchangePage({ params }: ExchangePageProps) {
     <>
       <BackHeader backLink="/" showCustomerService={true} />
       <div
-        className="px-6 py-6 space-y-8"
+        className="px-6 py-6 space-y-8 max-w-3xl mx-auto"
         style={{
           paddingTop: `${LAYOUT_CONSTANTS.BACK_HEADER_HEIGHT * 0.25}rem`,
         }}
