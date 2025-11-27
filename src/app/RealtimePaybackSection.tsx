@@ -3,14 +3,64 @@
 import { useState, useEffect } from "react";
 import { EXCHANGES } from "@/lib/exchanges";
 
+// 닉네임 마스킹 함수 (앞 6자리만 보여주고 나머지는 *로 치환)
+const maskNickname = (nickname: string) => {
+  if (nickname.length <= 6) {
+    return nickname;
+  }
+  return nickname.substring(0, 6) + "*".repeat(nickname.length - 6);
+};
+
+// 더미 닉네임 리스트
+const MOCK_NICKNAMES = [
+  "kimjong1234",
+  "leeminjun5678",
+  "parkdokyoon90",
+  "choiyeonhee12",
+  "jungseok34",
+  "yoonsohee56",
+  "jangwoojin78",
+  "limhyunwoo90",
+  "hanjisoo23",
+  "shinminseok45",
+  "ohseunghee67",
+  "kangdohyun89",
+  "seojihyun01",
+  "moonjongho23",
+  "hwangminji45",
+  "kimseung123",
+  "leeyoung56",
+  "parkjihyun78",
+  "choimin90",
+  "jungdohyun12",
+  "yoonjisoo34",
+  "janghyunwoo56",
+  "limsohee78",
+  "hanminseok90",
+  "shinjiho12",
+];
+
+// 거래소 선택 함수 (대부분 binance와 bybit)
+const getRandomExchange = () => {
+  const random = Math.random();
+  // 80% 확률로 binance 또는 bybit
+  if (random < 0.8) {
+    return Math.random() < 0.5 ? "Binance" : "Bybit";
+  }
+  // 20% 확률로 다른 거래소
+  const otherExchanges = EXCHANGES.filter(
+    (ex) => ex.name !== "Binance" && ex.name !== "Bybit"
+  );
+  return otherExchanges[Math.floor(Math.random() * otherExchanges.length)].name;
+};
+
 // 더미 유저 데이터
 const generateMockUsers = () => {
-  const names = ["조남일", "최민준", "최건태", "이동연", "박도균"];
-  return names.map((name, index) => ({
+  return MOCK_NICKNAMES.slice(0, 5).map((nickname, index) => ({
     id: index + 1,
-    name,
+    nickname,
     amount: Math.floor(Math.random() * 500000) + 50000,
-    exchange: EXCHANGES[Math.floor(Math.random() * EXCHANGES.length)].name,
+    exchange: getRandomExchange(),
     timestamp: new Date(Date.now() - Math.random() * 3600000).toISOString(),
   }));
 };
@@ -19,7 +69,7 @@ export function RealtimePaybackSection() {
   const [liveUsers, setLiveUsers] = useState<
     Array<{
       id: number;
-      name: string;
+      nickname: string;
       amount: number;
       exchange: string;
       timestamp: string;
@@ -37,24 +87,13 @@ export function RealtimePaybackSection() {
       const randomDelay = Math.floor(Math.random() * 10000) + 5000; // 5000~15000ms
       return setTimeout(() => {
         setLiveUsers((prev) => {
-          const names = [
-            "조남일",
-            "최민준",
-            "최건태",
-            "이동연",
-            "박도균",
-            "윤태섭",
-            "조원규",
-            "박준성",
-            "허정민",
-            "송하은",
-          ];
+          const nickname =
+            MOCK_NICKNAMES[Math.floor(Math.random() * MOCK_NICKNAMES.length)];
           const newUser = {
             id: Date.now(),
-            name: names[Math.floor(Math.random() * names.length)],
+            nickname,
             amount: Math.floor(Math.random() * 500000) + 50000,
-            exchange:
-              EXCHANGES[Math.floor(Math.random() * EXCHANGES.length)].name,
+            exchange: getRandomExchange(),
             timestamp: new Date().toISOString(),
           };
           return [newUser, ...prev.slice(0, 4)];
@@ -99,12 +138,18 @@ export function RealtimePaybackSection() {
                 }}
               >
                 <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center">
-                    <span className="text-lg">👤</span>
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500/30 to-purple-500/30 rounded-full flex items-center justify-center border border-blue-400/20">
+                    <span className="text-lg">
+                      {user.nickname.charAt(0).toUpperCase()}
+                    </span>
                   </div>
-                  <div>
-                    <div className="font-semibold">{user.name}</div>
-                    <div className="text-xs text-gray-400">{user.exchange}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold text-xs truncate">
+                      {maskNickname(user.nickname)}
+                    </div>
+                    <div className="text-xs text-gray-400 mt-0.5">
+                      {user.exchange}
+                    </div>
                   </div>
                 </div>
                 <div className="text-right">
