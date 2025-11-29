@@ -29,8 +29,8 @@ export const EXCHANGES = [
   {
     id: 'okx',
     name: 'OKX',
-    logo: '🪙',
-    logoSize: 'text-xl',
+    logo: '/exchanges/okx/okx_logo_icon.png',
+    logoSize: 'w-8 h-8 scale-72',
     paybackRate: 50,
     makerFee: 0.01,
     takerFee: 0.025,
@@ -42,8 +42,8 @@ export const EXCHANGES = [
   {
     id: 'bingx',
     name: 'BingX',
-    logo: '🔥',
-    logoSize: 'text-xl',
+    logo: '/exchanges/bingx/bingx_logo_icon.png',
+    logoSize: 'w-8 h-8 scale-70',
     paybackRate: 60,
     makerFee: 0.008,
     takerFee: 0.02,
@@ -55,8 +55,8 @@ export const EXCHANGES = [
   {
     id: 'gateio',
     name: 'Gate.io',
-    logo: '🚀',
-    logoSize: 'text-xl',
+    logo: '/exchanges/gateio/gateio_logo_icon.png',
+    logoSize: 'w-8 h-8 scale-70',
     paybackRate: 75,
     makerFee: 0.005,
     takerFee: 0.01,
