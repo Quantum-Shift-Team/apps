@@ -5,6 +5,7 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import { DynamicBanner } from "@/components/layout/DynamicBanner";
 import { ExchangeSection } from "./ExchangeSection";
 import { RealtimePaybackSection } from "./RealtimePaybackSection";
+import { WhaleTransactionSection } from "./WhaleTransactionSection";
 import { PaybackCalculator } from "./PaybackCalculator";
 import { BackHeader } from "@/components/layout/BackHeader";
 import { LAYOUT_CONSTANTS } from "@/lib/constants";
@@ -65,6 +66,9 @@ export default function Home() {
 
         {/* 실시간 페이백 환급 현황 */}
         <RealtimePaybackSection />
+
+        {/* 고래 입출금 내역 */}
+        <WhaleTransactionSection />
 
         {/* 페이백 계산기 섹션 */}
         <div className="px-6 py-2 bg-gray-900 text-white mb-8">

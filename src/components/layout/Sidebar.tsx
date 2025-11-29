@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { EXCHANGES } from "@/lib/exchanges";
-import { LAYOUT_CONSTANTS } from "@/lib/constants";
+import { LAYOUT_CONSTANTS, APP_INFO } from "@/lib/constants";
 
 const KAKAO_CHANNEL_URL = "https://pf.kakao.com/_your_channel_id";
 const TELEGRAM_URL = "https://t.me/your_telegram_channel";
@@ -151,12 +151,8 @@ export function Sidebar() {
       </nav>
 
       <div className="mt-auto px-4 py-3 border-t border-gray-800 text-xs text-gray-500">
-        <p className="leading-relaxed">
-          암호화폐 거래소 비교 플랫폼 version 1.0.0
-        </p>
+        <p className="leading-relaxed">{APP_INFO.getVersionText()}</p>
       </div>
     </aside>
   );
 }
-
-

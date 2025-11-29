@@ -47,7 +47,7 @@ export default function ExchangeNewPage({ params }: ExchangeNewPageProps) {
       </div>
 
       {/* 거래소 아이콘 - 중앙 정렬 */}
-      <div className="flex justify-center my-8">
+      {/* <div className="flex justify-center my-8">
         {exchange.logo.endsWith('.svg') || exchange.logo.endsWith('.png') ? (
           <Image 
             src={exchange.logo}
@@ -59,7 +59,7 @@ export default function ExchangeNewPage({ params }: ExchangeNewPageProps) {
         ) : (
           <span className="font-tossface text-6xl">{exchange.logo}</span>
         )}
-      </div>
+      </div> */}
 
       {/* 스텝 세로 표시 */}
       <div className="flex flex-col gap-1 mt-8">
