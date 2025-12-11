@@ -3,7 +3,6 @@
 import { EXCHANGES } from "@/lib/exchanges";
 import { notFound, useRouter } from "next/navigation";
 import { use } from "react";
-import Image from "next/image";
 import { FixedBottomButton } from "@/components/ui/FixedBottomButton";
 import { useState } from "react";
 import {

@@ -6,7 +6,7 @@ import { use } from "react";
 import Image from "next/image";
 import { FixedBottomButton } from "@/components/ui/FixedBottomButton";
 import { OKX_GUIDE_STEPS } from "@/lib/okx-guide-data";
-import { useGeneralPageContext } from "../layout";
+import { useGeneralPageContext } from "../context";
 
 interface ExchangeGeneralPageProps {
   params: Promise<{

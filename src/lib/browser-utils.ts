@@ -5,7 +5,7 @@
 export const isInstagramInAppBrowser = (): boolean => {
   if (typeof window === 'undefined') return false;
   
-  const userAgent = window.navigator.userAgent || window.navigator.vendor || (window as any).opera;
+  const userAgent = window.navigator.userAgent || window.navigator.vendor || '';
   
   // Instagram 인앱 브라우저 감지
   return /Instagram/i.test(userAgent);

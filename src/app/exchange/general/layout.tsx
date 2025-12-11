@@ -2,23 +2,8 @@
 
 import { BackHeader } from "@/components/layout/BackHeader";
 import { usePathname } from "next/navigation";
-import { createContext, useContext, useState } from "react";
-
-interface GeneralPageContextType {
-  currentStep: number;
-  setCurrentStep: (step: number | ((prev: number) => number)) => void;
-  handleBack: () => void;
-}
-
-const GeneralPageContext = createContext<GeneralPageContextType | null>(null);
-
-export const useGeneralPageContext = () => {
-  const context = useContext(GeneralPageContext);
-  if (!context) {
-    throw new Error("useGeneralPageContext must be used within GeneralLayout");
-  }
-  return context;
-};
+import { useState } from "react";
+import { GeneralPageContext } from "./context";
 
 export default function GeneralLayout({
   children,
@@ -53,4 +38,3 @@ export default function GeneralLayout({
     </GeneralPageContext.Provider>
   );
 }
-
