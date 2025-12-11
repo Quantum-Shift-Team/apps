@@ -43,7 +43,7 @@ export const EXCHANGES = [
     id: 'mexc',
     name: 'MEXC',
     logo: '/exchanges/mexc/mexc_logo_icon.png',
-    logoSize: 'w-8 h-8 scale-70',
+    logoSize: 'w-8 h-8 scale-50',
     paybackRate: 50,
     makerFee: 0.01,
     takerFee: 0.02,

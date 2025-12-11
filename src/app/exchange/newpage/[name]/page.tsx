@@ -50,8 +50,12 @@ export default function ExchangeNewPage({ params }: ExchangeNewPageProps) {
         window.open(exchange.referralUrl, "_blank", "noopener,noreferrer");
       }
     }
-    // 내 페이지는 signup 페이지로 이동
-    router.push(`/exchange/signup/${exchange.id}`);
+    // OKX 거래소일 때는 general 페이지로, 그 외는 signup 페이지로 이동
+    if (exchange.id === "okx") {
+      router.push(`/exchange/general/${exchange.id}`);
+    } else {
+      router.push(`/exchange/signup/${exchange.id}`);
+    }
   };
 
   return (
@@ -67,21 +71,6 @@ export default function ExchangeNewPage({ params }: ExchangeNewPageProps) {
           버튼을 누르면 바로 거래소 가입 화면으로 이동해요!
         </p>
       </div>
-
-      {/* 거래소 아이콘 - 중앙 정렬 */}
-      {/* <div className="flex justify-center my-8">
-        {exchange.logo.endsWith('.svg') || exchange.logo.endsWith('.png') ? (
-          <Image 
-            src={exchange.logo}
-            alt={exchange.name}
-            width={80}
-            height={80}
-            className="w-20 h-20 object-contain"
-          />
-        ) : (
-          <span className="font-tossface text-6xl">{exchange.logo}</span>
-        )}
-      </div> */}
 
       {/* 스텝 세로 표시 */}
       <div className="flex flex-col gap-1 mt-8">
