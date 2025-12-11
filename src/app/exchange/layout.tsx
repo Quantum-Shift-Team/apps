@@ -14,8 +14,7 @@ export default function ExchangeLayout({
   // 경로에 따라 이전 페이지 경로 설정
   const getBackLink = () => {
     if (pathname?.includes("/exchange/complete/")) {
-      const name = pathname.split("/exchange/complete/")[1];
-      return name ? `/exchange/id-document-capture/${name}` : "/";
+      return "/";
     }
     if (pathname?.includes("/exchange/id-document-capture/")) {
       const name = pathname.split("/exchange/id-document-capture/")[1];

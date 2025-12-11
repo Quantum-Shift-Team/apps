@@ -2,6 +2,23 @@
 
 import { BackHeader } from "@/components/layout/BackHeader";
 import { usePathname } from "next/navigation";
+import { createContext, useContext, useState } from "react";
+
+interface GeneralPageContextType {
+  currentStep: number;
+  setCurrentStep: (step: number | ((prev: number) => number)) => void;
+  handleBack: () => void;
+}
+
+const GeneralPageContext = createContext<GeneralPageContextType | null>(null);
+
+export const useGeneralPageContext = () => {
+  const context = useContext(GeneralPageContext);
+  if (!context) {
+    throw new Error("useGeneralPageContext must be used within GeneralLayout");
+  }
+  return context;
+};
 
 export default function GeneralLayout({
   children,
@@ -10,15 +27,30 @@ export default function GeneralLayout({
 }) {
   const pathname = usePathname();
   const exchangeName = pathname.split("/").pop();
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const handleBack = () => {
+    if (currentStep > 0) {
+      setCurrentStep((prev) => prev - 1);
+    } else {
+      // 첫 번째 단계면 newpage로 이동
+      window.location.href = `/exchange/newpage/${exchangeName}`;
+    }
+  };
 
   return (
-    <div className="bg-gray-900">
-      <BackHeader
-        backLink={`/exchange/newpage/${exchangeName}`}
-        showCustomerService={true}
-      />
-      <main>{children}</main>
-    </div>
+    <GeneralPageContext.Provider
+      value={{ currentStep, setCurrentStep, handleBack }}
+    >
+      <div className="bg-gray-900">
+        <BackHeader
+          backLink={`/exchange/newpage/${exchangeName}`}
+          onClose={handleBack}
+          showCustomerService={true}
+        />
+        <main>{children}</main>
+      </div>
+    </GeneralPageContext.Provider>
   );
 }
 

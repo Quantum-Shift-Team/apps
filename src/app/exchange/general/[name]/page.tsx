@@ -2,10 +2,11 @@
 
 import { EXCHANGES } from "@/lib/exchanges";
 import { notFound } from "next/navigation";
-import { use, useState } from "react";
+import { use } from "react";
 import Image from "next/image";
 import { FixedBottomButton } from "@/components/ui/FixedBottomButton";
 import { OKX_GUIDE_STEPS } from "@/lib/okx-guide-data";
+import { useGeneralPageContext } from "../layout";
 
 interface ExchangeGeneralPageProps {
   params: Promise<{
@@ -17,7 +18,7 @@ export default function ExchangeGeneralPage({
   params,
 }: ExchangeGeneralPageProps) {
   const { name } = use(params);
-  const [currentStep, setCurrentStep] = useState(0);
+  const { currentStep, setCurrentStep } = useGeneralPageContext();
   const exchange = EXCHANGES.find(
     (ex) => ex.id.toLowerCase() === name.toLowerCase()
   );
