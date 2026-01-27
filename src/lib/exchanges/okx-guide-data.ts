@@ -79,4 +79,3 @@ export const OKX_GUIDE_STEPS: GuideStep[] = [
     description: "주소만 입력하면 가입이 끝나요!",
   },
 ];
-

@@ -5,7 +5,8 @@ import { notFound } from "next/navigation";
 import { use } from "react";
 import Image from "next/image";
 import { FixedBottomButton } from "@/components/ui/FixedBottomButton";
-import { OKX_GUIDE_STEPS } from "@/lib/okx-guide-data";
+import { OKX_GUIDE_STEPS } from "@/lib/exchanges/okx-guide-data";
+import { MEXC_GUIDE_STEPS } from "@/lib/exchanges/mexc-guide-data";
 import { useGeneralPageContext } from "../context";
 
 interface ExchangeGeneralPageProps {
@@ -27,13 +28,22 @@ export default function ExchangeGeneralPage({
     notFound();
   }
 
-  // OKX 거래소가 아니거나 가이드 데이터가 없으면 notFound
-  if (exchange.id !== "okx" || !OKX_GUIDE_STEPS.length) {
+  // 거래소별 가이드 데이터 선택
+  let guideSteps;
+  if (exchange.id === "okx") {
+    guideSteps = OKX_GUIDE_STEPS;
+  } else if (exchange.id === "mexc") {
+    guideSteps = MEXC_GUIDE_STEPS;
+  } else {
     notFound();
   }
 
-  const currentGuide = OKX_GUIDE_STEPS[currentStep];
-  const isLastStep = currentStep === OKX_GUIDE_STEPS.length - 1;
+  if (!guideSteps.length) {
+    notFound();
+  }
+
+  const currentGuide = guideSteps[currentStep];
+  const isLastStep = currentStep === guideSteps.length - 1;
 
   const handleNext = () => {
     if (isLastStep) {
@@ -54,19 +64,19 @@ export default function ExchangeGeneralPage({
       </div>
       <div className="w-70 mx-auto">
         {/* 현재 단계 이미지 */}
-        <div className="mb-4 h-[70vh] min-h-[400px] overflow-hidden rounded-lg">
+        <div className="mb-4 rounded-lg">
           <Image
             src={currentGuide.image}
             alt={`${exchange.name} ${currentGuide.title} 가이드`}
             width={800}
             height={1200}
-            className="w-full h-full object-cover object-top rounded-lg"
+            className="w-full h-auto rounded-lg"
           />
         </div>
 
         {/* 진행 단계 표시 */}
         <div className="flex justify-center gap-2 mb-6">
-          {OKX_GUIDE_STEPS.map((_, index) => (
+          {guideSteps.map((_, index) => (
             <div
               key={index}
               className={`h-1 rounded-full transition-all ${
