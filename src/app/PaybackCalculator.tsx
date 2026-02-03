@@ -111,7 +111,7 @@ export function PaybackCalculator() {
       <div className="h-full overflow-y-auto pb-24">
         <div className="max-w-3xl mx-auto">
           {/* 계산기 모드 - 기존 UI */}
-          <div className="text-center mb-8 pt-6">
+          <div className="text-center mb-8 pt-20">
             <h3 className="text-xl md:text-2xl font-semibold text-green-400 mb-2">
               내가 돌려받을 페이백 금액은?
             </h3>
