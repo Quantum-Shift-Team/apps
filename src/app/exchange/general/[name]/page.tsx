@@ -7,6 +7,8 @@ import Image from "next/image";
 import { FixedBottomButton } from "@/components/ui/FixedBottomButton";
 import { OKX_GUIDE_STEPS } from "@/lib/exchanges/okx-guide-data";
 import { MEXC_GUIDE_STEPS } from "@/lib/exchanges/mexc-guide-data";
+import { BYBIT_GUIDE_STEPS } from "@/lib/exchanges/bybit-guide-data";
+import { BITGET_GUIDE_STEPS } from "@/lib/exchanges/bitget-guide-data";
 import { useGeneralPageContext } from "../context";
 
 interface ExchangeGeneralPageProps {
@@ -34,6 +36,10 @@ export default function ExchangeGeneralPage({
     guideSteps = OKX_GUIDE_STEPS;
   } else if (exchange.id === "mexc") {
     guideSteps = MEXC_GUIDE_STEPS;
+  } else if (exchange.id === "bybit") {
+    guideSteps = BYBIT_GUIDE_STEPS;
+  } else if (exchange.id === "bitget") {
+    guideSteps = BITGET_GUIDE_STEPS;
   } else {
     notFound();
   }

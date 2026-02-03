@@ -49,8 +49,13 @@ export default function ExchangeNewPage({ params }: ExchangeNewPageProps) {
         window.open(exchange.referralUrl, "_blank", "noopener,noreferrer");
       }
     }
-    // OKX, MEXC 거래소일 때는 general 페이지로, 그 외는 signup 페이지로 이동
-    if (exchange.id === "okx" || exchange.id === "mexc") {
+    // OKX, MEXC, Bybit, bitget 거래소일 때는 general 페이지로, 그 외는 signup 페이지로 이동
+    if (
+      exchange.id === "okx" ||
+      exchange.id === "mexc" ||
+      exchange.id === "bybit" ||
+      exchange.id === "bitget"
+    ) {
       router.push(`/exchange/general/${exchange.id}`);
     } else {
       router.push(`/exchange/signup/${exchange.id}`);
