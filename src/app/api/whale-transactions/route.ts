@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { EXCHANGES } from '@/lib/exchanges';
 
 // 인메모리 캐시
@@ -63,7 +63,7 @@ const generateWhaleTransactions = () => {
   });
 };
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   const cacheKey = 'whale-transactions';
   
   // 캐시 확인
