@@ -16,24 +16,10 @@ KAKAO_REDIRECT_URI=http://localhost:3000/api/auth/kakao
 NEXT_PUBLIC_KAKAO_JS_KEY=your_javascript_key
 ```
 
-### 2. 데이터베이스 시작
+### 개발 서버 실행
 
 ```bash
-docker-compose up -d
-```
-
-### 3. 데이터베이스 마이그레이션
-
-```bash
-make migrate
-
-# 또는
-npx prisma migrate dev
-```
-
-### 4. 개발 서버 실행
-
-```bash
+npx prisma generate
 npm run dev
 ```
 
